@@ -31,9 +31,8 @@ class Fighter(Owner):
     Contains minimal fields to fight.
     """
 
-    def __init__(self, name, max_hp=10, max_ap=10, power=10, resistance=10, dexterity=10, perception=10, intelligence=10,
-                 web=10,
-                 artifice=10):
+    def __init__(self, name, max_hp=10, max_ap=10, power=10, resistance=10, dexterity=10, perception=10, intelligence=10, 
+                 web=10, artifice=10):
         super(Fighter, self).__init__(name, max_hp)
         self.max_ap = self.ap = max_ap
         self.power = power #moc
