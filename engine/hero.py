@@ -31,26 +31,37 @@ class Fighter(Owner):
     Contains minimal fields to fight.
     """
 
-    def __init__(self, name, max_hp=10, max_ap=10, power=10, resistance=10, dexterity=10, perception=10, intelligence=10, 
-                 web=10, artifice=10):
+    def __init__(self, name, max_hp=10, max_ap=10,):
         super(Fighter, self).__init__(name, max_hp)
         self.max_ap = self.ap = max_ap
-        self.power = power #moc
-        self.resistance = resistance #wytrzymałość
-        self.dexterity = dexterity #sprawność
-        self.perception = perception #percepcja
-        self.intelligence = intelligence #inteligencja
-        self.web = web #sieć
-        self.artifice = artifice #spryt
+        
+    def start_batllemode(self):
+        pass
 
 
+#===============================================================================
+# 
+#===============================================================================
 class Hero(Fighter):
-    def __init__(self, name, lvl, exp, blood, profession, energy, regeneration, talents):
-        super(Hero, self).__init__(name)
-        self.lvl = lvl
-        self.exp = exp
-        self.blood = blood
-        self.profession = profession
-        self.energy = energy
-        self.regeneration = regeneration
-        self.talents = talents # TODO zmień nazwę
+    def __init__(self, name, blood_line, profession, lvl=1, exp=0, energy=20, 
+            power=10, resistance=10, dexterity=10, perception=10, 
+            intelligence=10, web=10, artifice=10):
+        super(Object, self).__init__(name)
+        #TODO zastanowić się nad organizacją statystyk
+        #=======================================================================
+        # self.lvl = lvl
+        # self.exp = exp
+        # self.blood_line = blood_line
+        # self.profession = profession
+        # self.energy = energy
+        # self.power = power #moc
+        # self.resistance = resistance #wytrzymałość
+        # self.dexterity = dexterity #sprawność
+        # self.perception = perception #percepcja
+        # self.intelligence = intelligence #inteligencja
+        # self.web = web #sieć
+        # self.artifice = artifice #spryt
+        #=======================================================================
+        
+        def start_batllemode(self):
+            pass
