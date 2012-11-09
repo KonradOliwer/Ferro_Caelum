@@ -1,4 +1,8 @@
-# Django settings for Ferro_Caelum project.
+import os
+import sys
+
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_PATH)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

@@ -1,0 +1,1 @@
+from hero.talents import *

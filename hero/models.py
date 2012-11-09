@@ -1,35 +1,35 @@
 # coding: utf-8
 from django.db import models
+from hero.talents import *
 
 class StatsType(models.Model):
     """Słownik statystyk zapisany w bazie danych"""
     #długość jeszcze do przemyślenia
-    name = models.CharField(max=50)
-
-class Stat(models.Model):
-    type = models.ForeignKey(StatsType)
-    additive_change = models.IntegerField(defult=0)
-    percent_change = models.PositiveIntegerField(defult=0)
-    base_value = models.IntegerField(defult=1)
-
-class Formula(models.Model):
-    """Element wzoru wyliczającego statystykę poboczną"""
-    pass
+    name = models.CharField(max_length=50)
 
 class SubstatsType(StatsType):
     """Słownik statystyk pobocznych zapisany w bazie danych"""
     formula = models.ManyToManyField(Formula)
 
+class Stat(models.Model):
+    type = models.ForeignKey(StatsType)
+    additive_change = models.IntegerField(default=0)
+    percent_change = models.PositiveIntegerField(default=0)
+    base_value = models.IntegerField(default=1)
+
+class Formula(models.Model):
+    """Element wzoru wyliczającego statystykę poboczną"""
+    pass
+
 class Substat(Stat): 
     """Współczynnik obliczany na podstawie wartości statystyk głównych"""
-    type = models.ForeignKey(StatsType)
-
-# Warto przemyśleć przeniesienie klasy do osobnego pliku, dla zwiększenia czytelności
+    pass
+    
+# Warto przemyśleć przeniesienie klasy do osobnego pliku, dla zwiększenia 
+# czytelności
 class Fighter(models.Model):
     #Gracz chce móc rzucać czary zmieniające statystyki główne!
-    stats = models.ManyToManyField(Stat) 
-    common_stats = models.ManyToManyField(Substat)
-    
+    stats = models.ManyToManyField(Stat)    
     #===========================================================================
     # Propozycje metod; Do przemyślenia przy realizacji systemu walki
     # 
@@ -58,10 +58,16 @@ class Fighter(models.Model):
 class NPCFighter(Fighter):
     pass
 
+class BloodLine(models.Model):
+    pass
+
+class Profession(models.Model):
+    pass
+
 class Hero(Fighter):
-    name = models.CharField(max=50)
-    lvl = models.PositiveSmallIntegerField(defult=1)
-    exp = models.PositiveIntegerField(defult=0)
+    name = models.CharField(max_length=50)
+    lvl = models.PositiveSmallIntegerField(default=1)
+    exp = models.PositiveIntegerField(default=0)
     bloodline = models.ForeignKey('BloodLine')
     profession = models.ForeignKey('Profession')
     #===========================================================================
@@ -73,4 +79,5 @@ class Hero(Fighter):
     # kodu dłuższej niż 80 znaków rekomendowane standardy 80, 100, 120)
     # nie wiem tylko dlaczego aptana Ctrl+$ generuje długość ramki na 81 -.-
     #===========================================================================
-    talents = models.ManyToManyField('Talent')
+    talents = models.ManyToManyField(Talent)
+    common_stats = models.ManyToManyField(Substat)
