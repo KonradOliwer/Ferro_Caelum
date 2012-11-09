@@ -1,2 +1,0 @@
-Ferro Caelum Engine
-===========
