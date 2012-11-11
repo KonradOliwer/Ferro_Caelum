@@ -7,23 +7,43 @@ class StatsType(models.Model):
     #długość jeszcze do przemyślenia
     name = models.CharField(max_length=50)
 
-class SubstatsType(StatsType):
-    """Słownik statystyk pobocznych zapisany w bazie danych"""
-    formula = models.ManyToManyField(Formula)
+class AlgebraSignature(models.Model):
+    """
+    Element wzoru wyliczającego statystykę poboczną
+     
+    Może być wartością statystyki, stałą, operatorem lub znakiem pustym.
+    """
+    OPERATOR_CHOICES=(
+                      (1, '+'),
+                      (2, '-'),
+                      (3, '*'),
+                      (4, '/'),
+                      (5, '^'),
+                      (6, '-'),
+                      (7, 'log'),
+                      (9, 'funkcja wykładnicza'), 
+                      (10, 'liczba z przedziału')
+                      )
+    
+    stat_value = models.ForeignKey(StatsType, blank=True)
+    constans = models.DecimalField(max_digits=9, decimal_places=3, blank=True)
+    operation = models.IntegerField(choices=OPERATOR_CHOICES, blank=True)
+    signature_right = models.ForeignKey('self', related_name='right',  blank=True)
+    signature_left = models.ForeignKey('self', related_name='left', blank=True)
 
 class Stat(models.Model):
+    """
+    Współczynnik bohatera
+    
+    Jego wartość bazowa jest wartością wprowadzaną, bądź jest obliczana na
+    podstawie wozru.
+    """
     type = models.ForeignKey(StatsType)
     additive_change = models.IntegerField(default=0)
     percent_change = models.PositiveIntegerField(default=0)
     base_value = models.IntegerField(default=1)
+    formula = models.ManyToManyField(AlgebraSignature, blank=True)
 
-class Formula(models.Model):
-    """Element wzoru wyliczającego statystykę poboczną"""
-    pass
-
-class Substat(Stat): 
-    """Współczynnik obliczany na podstawie wartości statystyk głównych"""
-    pass
     
 # Warto przemyśleć przeniesienie klasy do osobnego pliku, dla zwiększenia 
 # czytelności
@@ -80,4 +100,3 @@ class Hero(Fighter):
     # nie wiem tylko dlaczego aptana Ctrl+$ generuje długość ramki na 81 -.-
     #===========================================================================
     talents = models.ManyToManyField(Talent)
-    common_stats = models.ManyToManyField(Substat)
