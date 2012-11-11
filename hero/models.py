@@ -3,9 +3,10 @@ from django.db import models
 from hero.talents import *
 
 class StatsType(models.Model):
-    """Słownik statystyk zapisany w bazie danych"""
+    """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
     #długość jeszcze do przemyślenia
     name = models.CharField(max_length=50)
+    formula = models.ManyToManyField(AlgebraSignature, blank=True)
 
 class AlgebraSignature(models.Model):
     """
@@ -34,15 +35,11 @@ class AlgebraSignature(models.Model):
 class Stat(models.Model):
     """
     Współczynnik bohatera
-    
-    Jego wartość bazowa jest wartością wprowadzaną, bądź jest obliczana na
-    podstawie wozru.
     """
     type = models.ForeignKey(StatsType)
     additive_change = models.IntegerField(default=0)
     percent_change = models.PositiveIntegerField(default=0)
     base_value = models.IntegerField(default=1)
-    formula = models.ManyToManyField(AlgebraSignature, blank=True)
 
     
 # Warto przemyśleć przeniesienie klasy do osobnego pliku, dla zwiększenia 
