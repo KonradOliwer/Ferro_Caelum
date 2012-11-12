@@ -1,99 +1,71 @@
 # coding: utf-8
 from django.db import models
-from hero.talents import *
+from hero.stats_and_abstract import *
 
-class StatsType(models.Model):
-    """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
-    #długość jeszcze do przemyślenia
+class EffectTypes(models.Model):
     name = models.CharField(max_length=50)
-    formula = models.ManyToManyField(AlgebraSignature, blank=True)
 
-class AlgebraSignature(models.Model):
-    """
-    Element wzoru wyliczającego statystykę poboczną
-     
-    Może być wartością statystyki, stałą, operatorem lub znakiem pustym.
-    """
-    OPERATOR_CHOICES=(
-                      (1, '+'),
-                      (2, '-'),
-                      (3, '*'),
-                      (4, '/'),
-                      (5, '^'),
-                      (6, '-'),
-                      (7, 'log'),
-                      (9, 'funkcja wykładnicza'), 
-                      (10, 'liczba z przedziału')
-                      )
+class Effect(models.Model):
+    INFINITE = 0
     
-    stat_value = models.ForeignKey(StatsType, blank=True)
-    constans = models.DecimalField(max_digits=9, decimal_places=3, blank=True)
-    operation = models.IntegerField(choices=OPERATOR_CHOICES, blank=True)
-    signature_right = models.ForeignKey('self', related_name='right',  blank=True)
-    signature_left = models.ForeignKey('self', related_name='left', blank=True)
+    last = models.PositiveSmallIntegerField(defult=INFINITE)
+    type = models.ForeignKey(EffectTypes, blank=True)
+    stat = models.ForeignKey(StatsType)
+    formula = models.ForeignKey(AlgebraSignature)
+    additive = models.BooleanField(defult=True)
 
-class Stat(models.Model):
-    """
-    Współczynnik bohatera
-    """
-    type = models.ForeignKey(StatsType)
-    additive_change = models.IntegerField(default=0)
-    percent_change = models.PositiveIntegerField(default=0)
-    base_value = models.IntegerField(default=1)
-
+class Action(models.Model):
+    SELF = 1
+    ENEMY = 2
+    ALLY = 3
     
-# Warto przemyśleć przeniesienie klasy do osobnego pliku, dla zwiększenia 
-# czytelności
+    TARGET_CHOICES=(
+        (SELF, 'osobisty'),
+        (ENEMY, 'przeciwnik'),
+        (ALLY, 'sojusznik'),
+        )
+    
+    name = models.CharField(max_length=50)
+    auto_activation = models.BooleanField(defult=False)
+    only_battle = models.BooleanField(defult=True)
+    effects = models.ManyToManyField(Effect)
+    target = models.PositiveSmallIntegerField(choices=TARGET_CHOICES, defult=SELF)
+
+
+class Ability(models.Model):
+    name = models.CharField(max_length=50)
+    action = models.ManyToManyField(Action, blank=True)
+    #===========================================================================
+    # Tutaj skończyłem pracę
+    #===========================================================================
+    
 class Fighter(models.Model):
-    #Gracz chce móc rzucać czary zmieniające statystyki główne!
-    stats = models.ManyToManyField(Stat)    
-    #===========================================================================
-    # Propozycje metod; Do przemyślenia przy realizacji systemu walki
-    # 
-    # 
-    # def melee_atack(self, enemy):
-    #    pass
-    # 
-    # def range_atack(self, enemy):
-    #    pass
-    # 
-    # def move(self):
-    #    pass
-    # 
-    # def activate_program(self, target):
-    #    # Wirus albo program wspierajćy
-    #    # UWAGA! Konflikt nazw, warto znaleźć zamiennik dla 'program'
-    #    pass
-    # 
-    # def activate_field(self, enemy):
-    #    pass
-    # 
-    # def web_attack(self, enemy):
-    #    pass
-    #===========================================================================
-
-class NPCFighter(Fighter):
+    stats = models.ManyToManyField(Stat)
+    ability = models.ManyToManyField(Ability)    
+    
+class Slot(models.Model):
+    name = models.CharField(max_length=50)
+    
+class Item(models.Model):
+    type = models.ManyToManyField(Package)
+    stats = models.ManyToManyField(Stat)
+    abilities = models.ManyToManyField(Ability, blank=True)
+    used_slots = models.ManyToManyField(Slot, blank=True)
+    
+class Enemy(Fighter):
     pass
 
 class BloodLine(models.Model):
-    pass
+    name = models.CharField(max_length=50)
 
 class Profession(models.Model):
-    pass
+    name = models.CharField(max_length=50)
 
 class Hero(Fighter):
     name = models.CharField(max_length=50)
     lvl = models.PositiveSmallIntegerField(default=1)
     exp = models.PositiveIntegerField(default=0)
-    bloodline = models.ForeignKey('BloodLine')
-    profession = models.ForeignKey('Profession')
-    #===========================================================================
-    # Nazwa Talent podobno nie najlepsza, są jakieś inne propozycje nie idąca w
-    # konflikcie z Ability? 
-    #===========================================================================
-    #===========================================================================
-    # zdanie przerzucam, żeby nie mieć długości lini
-    # kodu dłuższej niż 80 znaków rekomendowane standardy 80, 100, 120)
-    # nie wiem tylko dlaczego aptana Ctrl+$ generuje długość ramki na 81 -.-
-    #===========================================================================
-    talents = models.ManyToManyField(Talent)
+    bloodline = models.ForeignKey(BloodLine)
+    profession = models.ForeignKey(Profession)
+    slots = models.ManyToManyField(Slot)
+    can_figth = models.BooleanField(defult=True)

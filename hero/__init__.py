@@ -1,1 +1,1 @@
-from hero.talents import *
+from hero.stats_and_abstract import *
