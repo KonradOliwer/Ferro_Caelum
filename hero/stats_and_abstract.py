@@ -1,14 +1,13 @@
 # coding: utf-8
 from django.db import models
 
-class Package(models.ManyToManyField):
+class Package(models.Model):
     name = models.CharField(max_length=50)
 
 class StatsType(models.Model):
     """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
     name = models.CharField(max_length=50)
     packages = models.ManyToManyField(Package)
-    formula = models.ManyToManyField(AlgebraSignature, blank=True)
 
 class AlgebraSignature(models.Model):
     """
@@ -28,7 +27,7 @@ class AlgebraSignature(models.Model):
                       (10, 'liczba z przedziału')
                     )
     stat_value = models.ForeignKey(StatsType, blank=True)
-    is_target_stat = models.BooleanField() # if not it's self stat
+    self_stat_value = models.BooleanField(default=True)
     constans = models.DecimalField(max_digits=9, decimal_places=3, blank=True)
     operation = models.IntegerField(choices=OPERATOR_CHOICES, blank=True)
     signature_right = models.ForeignKey('self', related_name='right', blank=True)
@@ -42,3 +41,4 @@ class Stat(models.Model):
     additive_change = models.IntegerField(default=0)
     percent_change = models.PositiveIntegerField(default=0)
     base_value = models.IntegerField(default=1)
+    formula = models.ForeignKey(AlgebraSignature, blank=True)

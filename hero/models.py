@@ -8,11 +8,25 @@ class EffectTypes(models.Model):
 class Effect(models.Model):
     INFINITE = 0
     
-    last = models.PositiveSmallIntegerField(defult=INFINITE)
+    last = models.PositiveSmallIntegerField(default=INFINITE)
     type = models.ForeignKey(EffectTypes, blank=True)
     stat = models.ForeignKey(StatsType)
     formula = models.ForeignKey(AlgebraSignature)
-    additive = models.BooleanField(defult=True)
+    additive = models.BooleanField(default=True)
+
+class Condition(models.Model):
+    OPERATOR_CHOICES=(
+                      (1, '<'),
+                      (2, '>'),
+                      (3, '='),
+                    )
+    left = models.ForeignKey(StatsType, related_name='left')
+    operator = models.PositiveSmallIntegerField(choices=OPERATOR_CHOICES, default=1)
+    value = models.DecimalField(max_digits=6, decimal_places=3)
+    right = models.ForeignKey(StatsType, related_name='right', blank=True)
+    # if (left) (operator) value*(rigth or 1) 
+    # np. if power > 0.05*hp
+    
 
 class Action(models.Model):
     SELF = 1
@@ -26,18 +40,18 @@ class Action(models.Model):
         )
     
     name = models.CharField(max_length=50)
-    auto_activation = models.BooleanField(defult=False)
-    only_battle = models.BooleanField(defult=True)
+    auto_activation = models.BooleanField(default=False)
+    auto_activation_conditions = models.ManyToManyField(Condition)
+    only_battle = models.BooleanField(default=True)
     effects = models.ManyToManyField(Effect)
-    target = models.PositiveSmallIntegerField(choices=TARGET_CHOICES, defult=SELF)
-
+    target = models.PositiveSmallIntegerField(choices=TARGET_CHOICES, default=SELF)
 
 class Ability(models.Model):
     name = models.CharField(max_length=50)
-    action = models.ManyToManyField(Action, blank=True)
-    #===========================================================================
-    # Tutaj skończyłem pracę
-    #===========================================================================
+    action = models.ManyToManyField(Action)
+    abilities_requirements = models.ManyToManyField('self', symmetrical=False)
+    lvl_requirement = models.IntegerField(default=0)
+    stats_abilities_requirements = models.ManyToManyField(Condition)
     
 class Fighter(models.Model):
     stats = models.ManyToManyField(Stat)
@@ -45,12 +59,13 @@ class Fighter(models.Model):
     
 class Slot(models.Model):
     name = models.CharField(max_length=50)
-    
+
+#Wymaga modyfuikacji:    
 class Item(models.Model):
     type = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
-    abilities = models.ManyToManyField(Ability, blank=True)
-    used_slots = models.ManyToManyField(Slot, blank=True)
+    abilities = models.ManyToManyField(Ability)
+    used_slots = models.ManyToManyField(Slot)
     
 class Enemy(Fighter):
     pass
@@ -68,4 +83,4 @@ class Hero(Fighter):
     bloodline = models.ForeignKey(BloodLine)
     profession = models.ForeignKey(Profession)
     slots = models.ManyToManyField(Slot)
-    can_figth = models.BooleanField(defult=True)
+    can_figth = models.BooleanField(default=True)
