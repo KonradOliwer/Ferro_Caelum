@@ -17,13 +17,13 @@ class Stat(models.Model):
     Współczynnik bohatera
     """
     name = models.ForeignKey(StatsType)
-    additive_change = models.IntegerField(default=0)
-    percent_change = models.PositiveIntegerField(default=0)
-    base_value = models.IntegerField(default=1)
+    additive = models.IntegerField(default=0)
+    percent = models.PositiveIntegerField(default=0)
+    base = models.IntegerField(default=1)
     formula = models.ForeignKey(Formula, null=True)
     
     def current_value(self):
-        value = 0.01 * (100 + self.percent_change) * (base_value + additive_change)
+        value = 0.01 * (100 + self.percent) * (self.base + self.additive)
         return value if value >= 0 else 0
     
     def __unicode__(self):

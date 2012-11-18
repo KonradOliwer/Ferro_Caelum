@@ -19,5 +19,8 @@ class SimpleTest(TestCase):
         self.stat4 = Stat.objects.create(name=self.type4)
         self.hero.stats.add(self.stat1, self.stat2, self.stat3, self.stat4)
         
-    def atribut(self):
-        print self.hero.atribut('power')
+    def test_atribut(self):
+        print self.hero.getattr('power')
+        print self.hero.getattr('power', 'additive')
+        print self.hero.setattr('power', 'additive', 10)
+        print self.hero.getattr('power', 'additive')

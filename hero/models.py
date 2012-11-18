@@ -19,6 +19,22 @@ class Fighter(models.Model):
     package = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
     ability = models.ManyToManyField(Ability)  
+         
+    def setattr(self, name, kind, value_change):
+        try:
+            setattr(self, name, value_change)
+        except AttributeError:
+            setattr(stat, kind, value_change)   
+    
+    def getattr(self, name, kind=None):
+        try:
+            return getattr(self, name)
+        except AttributeError:
+            stat = self.stats.get(name__name=name)
+            if kind is None:
+                return stat.current_value()
+            else:
+                return getattr(stat, kind)   
     
     def __unicode__(self):
         return u'%s' % self.name 
@@ -49,14 +65,3 @@ class Hero(Fighter):
     can_figth = models.BooleanField(default=True)
     energy = models.PositiveIntegerField(default=10)
     current_energy = models.PositiveIntegerField(default=10)
-    
-    def atribut(self, name, kind=None, *value_change):
-        try:
-            return getattr(self, name, *value_change)
-        except AttributeError:
-            stat = self.stats.get(name__name=name)
-            if kind is None:
-                return stat.current_value()
-            else:
-                return getattr(stat, kind, *value_change)
-            
