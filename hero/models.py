@@ -18,7 +18,10 @@ class Fighter(models.Model):
     lvl = models.PositiveSmallIntegerField(default=1)
     package = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
-    ability = models.ManyToManyField(Ability)    
+    ability = models.ManyToManyField(Ability)  
+    
+    def __unicode__(self):
+        return u'%s' % self.name 
     
 class Slot(models.Model):
     name = models.CharField(max_length=50)
@@ -44,3 +47,16 @@ class Hero(Fighter):
     profession = models.ForeignKey(Profession)
     slots = models.ManyToManyField(Slot)
     can_figth = models.BooleanField(default=True)
+    energy = models.PositiveIntegerField(default=10)
+    current_energy = models.PositiveIntegerField(default=10)
+    
+    def atribut(self, name, kind=None, *value_change):
+        try:
+            return getattr(self, name, *value_change)
+        except AttributeError:
+            stat = self.stats.get(name__name=name)
+            if kind is None:
+                return stat.current_value()
+            else:
+                return getattr(stat, kind, *value_change)
+            

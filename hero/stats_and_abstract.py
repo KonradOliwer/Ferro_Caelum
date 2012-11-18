@@ -16,8 +16,28 @@ class Stat(models.Model):
     """
     Współczynnik bohatera
     """
-    type = models.ForeignKey(StatsType)
+    name = models.ForeignKey(StatsType)
     additive_change = models.IntegerField(default=0)
     percent_change = models.PositiveIntegerField(default=0)
     base_value = models.IntegerField(default=1)
-    formula = models.ForeignKey(Formula, blank=True)
+    formula = models.ForeignKey(Formula, null=True)
+    
+    def current_value(self):
+        value = 0.01 * (100 + self.percent_change) * (base_value + additive_change)
+        return value if value >= 0 else 0
+    
+    def __unicode__(self):
+        return u'%s' % self.name.name
+    
+class Condition(models.Model):
+    OPERATOR_CHOICES = (
+                      (1, '<'),
+                      (2, '>'),
+                      (3, '='),
+                    )
+    left = models.ForeignKey(StatsType, related_name='left')
+    operator = models.PositiveSmallIntegerField(choices=OPERATOR_CHOICES, default=1)
+    value = models.DecimalField(max_digits=6, decimal_places=3)
+    right = models.ForeignKey(StatsType, related_name='right', blank=True)
+    # if (left) (operator) value*(rigth or 1) 
+    # np. if power > 0.05*hp
