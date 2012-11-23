@@ -11,6 +11,20 @@ class Package(models.Model):
 
 class Formula(models.Model):
     text = models.CharField(max_length=100)
+    
+    def get_value(self, user, target):
+        if not hasattr(self, 'f'):
+            self.s = self._create_stack()
+            self.f = self._create_formula()
+        return self.f(user, target)
+    
+    def _create_stack(self):
+        stack = []
+        return stack
+    
+    def _create_formula(self):
+        return lambda user, target: self.s
+        
 
 class Stat(models.Model):
     """

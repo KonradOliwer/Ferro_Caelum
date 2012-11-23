@@ -18,9 +18,15 @@ class SimpleTest(TestCase):
         self.stat3 = Stat.objects.create(name=self.type3)
         self.stat4 = Stat.objects.create(name=self.type4)
         self.hero.stats.add(self.stat1, self.stat2, self.stat3, self.stat4)
+        self.formlula = Formula.objects.create()
         
     def test_atribut(self):
         print self.hero.getattr('power')
         print self.hero.getattr('power', 'additive')
         print self.hero.setattr('power', 'additive', 10)
         print self.hero.getattr('power', 'additive')
+        
+    def test_python_option(self):
+        print self.formlula.get_value(2,3)
+        print self.formlula.get_value(4,5)
+        print self.formlula.get_value(6,5)
