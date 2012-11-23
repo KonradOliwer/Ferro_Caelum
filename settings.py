@@ -7,6 +7,8 @@ sys.path.append(ROOT_PATH)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+AUTH_PROFILE_MODULE = 'user_profile.UserProfile'
+
 ADMINS = (
 # ('Your Name', 'your_email@example.com'),
 )
@@ -49,12 +51,12 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "media")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL =  '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -110,7 +112,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-)
+    (os.path.join(ROOT_PATH, "templates"),)
+    )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -124,6 +127,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'hero',
+    'user_profile',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,3 +158,5 @@ LOGGING = {
         },
     }
 }
+
+

@@ -1,0 +1,5 @@
+body {font-family: century gothic,arial,serif;padding:0;background:whitesmoke;}
+
+a	{color: orange;text-decoration: none }
+ul,ol{list-style:none;margin:0;}
+.errorlist {color: #ffc200;font-weight:bold;font-size:85%; }
