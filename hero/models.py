@@ -14,19 +14,19 @@ class Ability(models.Model):
     effects = models.ManyToManyField(Effect)
     
 class Fighter(models.Model):
-    name = models.CharField(max_length=50)
-    lvl = models.PositiveSmallIntegerField(default=1)
     package = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
-    ability = models.ManyToManyField(Ability)  
+    ability = models.ManyToManyField(Ability)
+    acrions = models.ManyToManyField(Action)
+
          
     def setattr(self, name, kind, value_change):
         try:
             setattr(self, name, value_change)
         except AttributeError:
-            setattr(stat, kind, value_change)   
+            setattr(stat, kind, value_change)  # tu jest blad. I w ogole o co chodzi w ty kawałku?
     
-    def getattr(self, name, kind=None):
+    def getattr(self, name, kind=None): # to chyba nie zadziala. po returnie przeciez nie wejdzie glebiej.
         try:
             return getattr(self, name)
         except AttributeError:
@@ -37,7 +37,15 @@ class Fighter(models.Model):
                 return getattr(stat, kind)   
     
     def __unicode__(self):
-        return u'%s' % self.name 
+        return u'%s' % self.name
+
+class Action(models.Model):
+    name = models.CharField(max_length=20)
+    cost = models.PositiveIntegerField #aby na pewno positive? do rozwazenia
+    type = models.ManyToManyField # typ akcji. niesprecyzowany
+    description = models.CharField(max_length=300)
+    #niemozliwe do zrealizowana, aby actions byly rozszerzalne w wymaganym zakresie. Cos z tym trzeba zrobic.
+    #musze gruntownie przemyslec sprawe, zwlaszca z dziedziczeniem.
     
 class Slot(models.Model):
     name = models.CharField(max_length=50)
@@ -58,6 +66,8 @@ class Profession(models.Model):
     name = models.CharField(max_length=50)
 
 class Hero(Fighter):
+    name = models.CharField(max_length=50)
+    lvl = models.PositiveSmallIntegerField(default=1)
     exp = models.PositiveIntegerField(default=0)
     bloodline = models.ForeignKey(BloodLine)
     profession = models.ForeignKey(Profession)
