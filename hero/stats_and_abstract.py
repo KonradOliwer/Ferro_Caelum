@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.db import models
+from decimal import Decimal
 
 class StatsType(models.Model):
     """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
@@ -9,23 +10,83 @@ class Package(models.Model):
     name = models.CharField(max_length=50)
     stats = models.ManyToManyField(StatsType)
 
+#===============================================================================
+# Sherlock Holmes and Dr Watson were going camping. They pitched their tent under the stars and
+# went to sleep. Sometime in the middle of the night Holmes woke Watson up and said: "Watson, look
+# up at the sky, and tell me what you see." Watson replied: "I see millions and millions of stars."
+# Holmes said: "And what do you deduce from that?" Watson replied: "Well, if there are millions of
+# stars, and if even a few of those have planets, it’s quite likely there are some planets like
+# Earth out there. And if there are a few planets like Earth out there, there might also be life."
+# And Holmes said: "Watson, you idiot, it means that somebody stole our tent."
+#===============================================================================
+
 class Formula(models.Model):
-    text = models.CharField(max_length=100)
+    text = models.CharField(max_length=100)   
     
-    def get_value(self, user, target):
-        if not hasattr(self, 'f'):
-            self.s = self._create_stack()
-            self.f = self._create_formula()
-        return self.f(user, target)
+    def set_RPN(self):
+        self.RPN = self._create_RPN()
     
-    def _create_stack(self):
-        stack = []
-        return stack
+    def _create_RPN(self):
+        """Zmienia wzór zapisany w sposób standardowy w odwróconą polską notację"""
+        right_to_left = ['^']
+        operators_priority = {'':-5, '(': 0, ')': 0, '+': 5, '-': 5, '*': 10, '/': 10, '^': 15,
+                              'random': 20, 'log': 20}
+        
+        input = self.text.replace(',', ') (')
+        input = input.split();
+        output = []
+        operators = []
+        for current in input:
+            if not self._handle_operator(current, output, operators, right_to_left, 
+                                          operators_priority):
+                if not self._handle_number(current, output):
+                    self._handle_reference(current, output)
+        while operators:
+            output.append(operators.pop())
+        return output
     
+    def _handle_operator(self, c, output, operators, right, priority):
+        if not c in priority:
+            return False  
+        if c == '(':
+            operators.append(c)
+        elif c == ')':
+            while operators[-1] != '(':
+                output.append(operators.pop())
+            if operators.pop() != '(':
+                raise Exception("Missing (")
+        else:
+            cp = priority[c]
+            if c in right:
+                while operators and cp < priority[operators[-1]]:
+                    output.append(operators.pop())
+            else:
+                while operators and cp <= priority[operators[-1]]:
+                    output.append(operators.pop())
+            operators.append(c)       
+        return True
+                
+    
+    def _handle_number(self, c, output):
+        try:
+            output.append(Decimal(c))
+            return True
+        except ValueError:
+            return False
+        
+    def _handle_reference(self, c, output):
+        output.append("ref")
+    
+    def _get_previous(self, operators):
+        try:
+            return operators[-1]
+        except IndexError:
+            return ''
+                        
     def _create_formula(self):
         return lambda user, target: self.s
-        
-
+    
+    
 class Stat(models.Model):
     """
     Współczynnik bohatera

@@ -18,15 +18,11 @@ class SimpleTest(TestCase):
         self.stat3 = Stat.objects.create(name=self.type3)
         self.stat4 = Stat.objects.create(name=self.type4)
         self.hero.stats.add(self.stat1, self.stat2, self.stat3, self.stat4)
-        self.formlula = Formula.objects.create()
-        
-    def test_atribut(self):
-        print self.hero.getattr('power')
-        print self.hero.getattr('power', 'additive')
-        print self.hero.setattr('power', 'additive', 10)
-        print self.hero.getattr('power', 'additive')
+        self.formula = Formula.objects.create()
         
     def test_python_option(self):
-        print self.formlula.get_value(2,3)
-        print self.formlula.get_value(4,5)
-        print self.formlula.get_value(6,5)
+        self.formula = Formula(text = '5 + 2 * ( 1 + 2 ^ 2 - random ( 0 , 3 ) ^ 9 ) ^ 2 ^ 3 + 5')
+        self.formula.save()
+        self.formula.set_RPN()
+        print self.formula.text
+        print self.formula.RPN
