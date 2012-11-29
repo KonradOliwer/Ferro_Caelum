@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Log in</title>
+    <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
+</head>
+<body>
+
+{{ state }}
+<form action="/login/" method="post">
+    {% csrf_token %}
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+    {% endif %}
+    {% if not user.is_authenticated %}
+    login:
+    <input type="text" name="username" value="{{ username}}" /><br />
+    hasło:
+    <input type="password" name="password" value="" /><br />
+
+    <input type="submit" value="Log In" />
+    {% else %}
+    <a href="/">Powrót na stronę główną</a>
+    {% endif %}
+</form>
+</body>
+</html>

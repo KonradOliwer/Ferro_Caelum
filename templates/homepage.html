@@ -5,7 +5,21 @@
     <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
 </head>
 <body>
+    {% if user.is_authenticated %}
+
+    <h1>Witaj, {{ user.username }}.</h1>
+        <!--
+        Menu zalogowanego uzytkownika
+        -->
+    <a href="logout">Wyloguj</a>
+    {% else %}
+
     <h1>Witaj!</h1>
-    <a href="registration">Rejestracja</a>
+        <!--
+        Menu NIEzalogowanego uzytkownika
+        -->
+    <a href="registration">Rejestracja</a><br>
+    <a href="login">Logowanie</a>
+    {% endif %}
 </body>
 </html>
