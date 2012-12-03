@@ -24,6 +24,7 @@ class Fighter(models.Model):
         try:
             setattr(self, name, value_change)
         except AttributeError:
+            stat = self.stats.get(name__name=name)
             setattr(stat, kind, value_change)   
     
     def getattr(self, name, kind=None):

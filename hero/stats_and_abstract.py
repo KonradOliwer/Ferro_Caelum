@@ -1,6 +1,9 @@
 # coding: utf-8
+from django.db.models import signals
 from django.db import models
-from decimal import Decimal
+import decimal 
+import random
+import math
 
 class StatsType(models.Model):
     """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
@@ -21,70 +24,123 @@ class Package(models.Model):
 #===============================================================================
 
 class Formula(models.Model):
-    text = models.CharField(max_length=100)   
+    text = models.CharField(max_length=100)
+    operators = {'': (-5,), '(': (0,), ')': (0,), '+': (5, lambda a, b: a + b),
+                          '-': (5, lambda a, b: a - b), '*': (10, lambda a, b: a * b),
+                          '/': (10, lambda a, b: a / b), 
+                          '^': (15, lambda a, b: decimal.Decimal(math.pow(a, b))),
+                          '-u': (17, lambda a:-a),
+                          'random': (20, lambda a, b: random.randint(int(a), int(b))),
+                          'log': (20, lambda base, a: math.log(a, base))}
     
-    def set_RPN(self):
-        self.RPN = self._create_RPN()
+    def __init__(self, *args, **kwargs):
+        super(Formula, self).__init__(*args, **kwargs)
+        self.create_RPN()
     
-    def _create_RPN(self):
-        """Zmienia wzór zapisany w sposób standardowy w odwróconą polską notację"""
-        right_to_left = ['^']
-        operators_priority = {'':-5, '(': 0, ')': 0, '+': 5, '-': 5, '*': 10, '/': 10, '^': 15,
-                              'random': 20, 'log': 20}
+    def calculate(self, user, target):
+        """Wykorzystuje wzór do obliczenia wartości dla zadanego celu i osoby aktywującej"""
+        stack = []
+        r = 0
+        for token in self.RPN:
+            result = self._hendle_operator(token, stack)
+            if not result:
+                stack.append(token)
+        return stack[0]
+    
+    def create_RPN(self):
+        """Zmienia wzór zapisany w sposób standardowy w odwróconą polską notację"""     
+        signals.post_init.send(sender=self.__class__, instance=self)
+        right_to_left = ['^', '-u']
         
         input = self.text.replace(',', ') (')
+        if input[0] == '-':
+            input = '-u' + input[1:]
         input = input.split();
         output = []
-        operators = []
+        operators_stack = []
         for current in input:
-            if not self._handle_operator(current, output, operators, right_to_left, 
-                                          operators_priority):
-                if not self._handle_number(current, output):
-                    self._handle_reference(current, output)
-        while operators:
-            output.append(operators.pop())
-        return output
+            if not self._add_operator(current, output, operators_stack, right_to_left):
+                if not self._add_number(current, output):
+                    if not self._add_reference(current, output):
+                        raise Exception(u'Incorect value in formula')
+        while operators_stack:
+            output.append(operators_stack.pop())
+        self.RPN = output
     
-    def _handle_operator(self, c, output, operators, right, priority):
-        if not c in priority:
+    def _get_priority(self, operator):
+        return self.operators[operator][0]
+    
+    def _get_function(self, operator):
+        return self.operators[operator][1]
+    
+    def _hendle_operator(self, token, stack):
+        if not token in self.operators:
+            return False
+        arg = self._get_value(stack)
+        if token == '-u':
+            stack.append(self._get_function(token)(arg))
+        else:
+            arg1 = self._get_value(stack)
+            stack.append(self._get_function(token)(arg1, arg))
+        return True
+                                               
+    def _get_value(self, stack):
+        token = stack.pop()
+        if token is decimal.Decimal or int:
+            return token
+        else:
+            target, item, stat = token
+            if item is None:
+                return getattr(target, 'getattr')(stat)
+            else:
+                raise Exception(u"Not yet supported")
+        
+    def _add_operator(self, c, output, operators_stack, right):
+        if not c in self.operators:
             return False  
         if c == '(':
-            operators.append(c)
+            operators_stack.append(c)
         elif c == ')':
-            while operators[-1] != '(':
-                output.append(operators.pop())
-            if operators.pop() != '(':
-                raise Exception("Missing (")
+            while operators_stack[-1] != '(':
+                output.append(operators_stack.pop())
+            if operators_stack.pop() != '(':
+                raise Exception(u'Missing (')
         else:
-            cp = priority[c]
+            cp = self._get_priority(c)
             if c in right:
-                while operators and cp < priority[operators[-1]]:
-                    output.append(operators.pop())
+                while operators_stack and cp < self._get_priority(operators_stack[-1]):
+                    output.append(operators_stack.pop())
             else:
-                while operators and cp <= priority[operators[-1]]:
-                    output.append(operators.pop())
-            operators.append(c)       
-        return True
-                
+                while operators_stack and cp <= self._get_priority(operators_stack[-1]):
+                    output.append(operators_stack.pop())
+            operators_stack.append(c)       
+        return True                
     
-    def _handle_number(self, c, output):
+    def _add_number(self, c, output):
         try:
-            output.append(Decimal(c))
+            output.append(decimal.Decimal(c))
+            return True
+        except (ValueError, decimal.InvalidOperation):
+            return False
+        
+    def _add_reference(self, c, output):
+        try:
+            target, atribute = c.split('.')
+            try:
+                item, stat = atribute.split('-') 
+            except ValueError:
+                item = None
+                stat = atribute
+            output.append((target, item, stat))
             return True
         except ValueError:
             return False
-        
-    def _handle_reference(self, c, output):
-        output.append("ref")
     
-    def _get_previous(self, operators):
+    def _get_previous(self, operators_stack):
         try:
-            return operators[-1]
+            return operators_stack[-1]
         except IndexError:
             return ''
-                        
-    def _create_formula(self):
-        return lambda user, target: self.s
     
     
 class Stat(models.Model):
