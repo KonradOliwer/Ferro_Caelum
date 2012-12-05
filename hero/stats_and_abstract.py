@@ -4,6 +4,7 @@ from django.db import models
 import decimal 
 import random
 import math
+import sys
 
 class StatsType(models.Model):
     """Dane na temat statystyk i sposobów ich obliczania u szystkich bohaterów"""
@@ -31,7 +32,7 @@ class Formula(models.Model):
                           '^': (15, lambda a, b: decimal.Decimal(math.pow(a, b))),
                           '-u': (17, lambda a:-a),
                           'random': (20, lambda a, b: random.randint(int(a), int(b))),
-                          'log': (20, lambda base, a: math.log(a, base))}
+                          'log': (20, lambda base, a: decimal.Decimal(math.log(a, base)))}
     
     def __init__(self, *args, **kwargs):
         super(Formula, self).__init__(*args, **kwargs)
@@ -42,9 +43,9 @@ class Formula(models.Model):
         stack = []
         r = 0
         for token in self.RPN:
-            result = self._hendle_operator(token, stack)
+            result = self._hendle_operator(token, stack, user, target)
             if not result:
-                stack.append(token)
+                stack.append(self._get_value(token, user, target))
         return stack[0]
     
     def create_RPN(self):
@@ -73,25 +74,28 @@ class Formula(models.Model):
     def _get_function(self, operator):
         return self.operators[operator][1]
     
-    def _hendle_operator(self, token, stack):
+    def _hendle_operator(self, token, stack, user, target):
         if not token in self.operators:
             return False
-        arg = self._get_value(stack)
+        arg = self._get_value(stack.pop(), user, target)
         if token == '-u':
             stack.append(self._get_function(token)(arg))
         else:
-            arg1 = self._get_value(stack)
+            arg1 = self._get_value(stack.pop(), user, target)
             stack.append(self._get_function(token)(arg1, arg))
         return True
                                                
-    def _get_value(self, stack):
-        token = stack.pop()
-        if token is decimal.Decimal or int:
+    def _get_value(self, token, u, t):
+        try:
+            token + 1
             return token
-        else:
+        except TypeError:
             target, item, stat = token
             if item is None:
-                return getattr(target, 'getattr')(stat)
+                if target=='target':
+                    return getattr(t, 'getattr')(stat)
+                else:
+                    return getattr(u, 'getattr')(stat)
             else:
                 raise Exception(u"Not yet supported")
         

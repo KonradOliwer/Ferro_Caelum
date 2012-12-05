@@ -18,7 +18,7 @@ class Fighter(models.Model):
     lvl = models.PositiveSmallIntegerField(default=1)
     package = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
-    ability = models.ManyToManyField(Ability)  
+    ability = models.ManyToManyField(Ability)
          
     def setattr(self, name, kind, value_change):
         try:
@@ -36,6 +36,9 @@ class Fighter(models.Model):
                 return stat.current_value()
             else:
                 return getattr(stat, kind)   
+            
+    def get_item_stat(self):
+        return None
     
     def __unicode__(self):
         return u'%s' % self.name 
@@ -44,6 +47,7 @@ class Slot(models.Model):
     name = models.CharField(max_length=50)
     
 class Item(models.Model):
+    name = models.CharField(max_length=50)
     kind = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
     abilities = models.ManyToManyField(Ability)
@@ -66,3 +70,16 @@ class Hero(Fighter):
     can_figth = models.BooleanField(default=True)
     energy = models.PositiveIntegerField(default=10)
     current_energy = models.PositiveIntegerField(default=10)
+    equiped_items =  models.ManyToManyField(Item, related_name = 'equiped')
+    items =  models.ManyToManyField(Item, related_name = 'unequiped')
+    
+    def get_item_stat(self, item_name, stat_name, kind = None):
+        try:
+            item = self.equiped_items.get(kind__name = item_name)
+        except Exception:
+            item = self.equiped_items.get(name = item_name)
+        stat = item.stats.get(name__name=stat_name)
+        if kind is None:
+            return stat.current_value()
+        else:
+            return getattr(stat, kind)
