@@ -52,6 +52,26 @@ class Item(models.Model):
     stats = models.ManyToManyField(Stat)
     abilities = models.ManyToManyField(Ability)
     used_slots = models.ManyToManyField(Slot)
+            
+    def setattr(self, name, kind, value_change):
+        try:
+            setattr(self, name, value_change)
+        except AttributeError:
+            stat = self.stats.get(name__name=name)
+            setattr(stat, kind, value_change)   
+    
+    def getattr(self, name, kind=None):
+        try:
+            return getattr(self, name)
+        except AttributeError:
+            try:
+                stat = self.stats.get(name__name=name)
+            except Stat.DoesNotExist:
+                return None
+            if kind is None:
+                return stat.current_value()
+            else:
+                return getattr(stat, kind)    
     
 class NPCFighter(Fighter):
     pass
@@ -76,10 +96,6 @@ class Hero(Fighter):
     def get_item_stat(self, item_name, stat_name, kind = None):
         try:
             item = self.equiped_items.get(kind__name = item_name)
-        except Exception:
+        except DoesNotExists:
             item = self.equiped_items.get(name = item_name)
-        stat = item.stats.get(name__name=stat_name)
-        if kind is None:
-            return stat.current_value()
-        else:
-            return getattr(stat, kind)
+        return item.getattr(stat_name, kind)

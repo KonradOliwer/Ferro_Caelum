@@ -19,8 +19,15 @@ class SimpleTest(TestCase):
         self.stat3 = Stat.objects.create(name=self.type3)
         self.stat4 = Stat.objects.create(name=self.type4)
         self.hero.stats.add(self.stat1, self.stat2, self.stat3, self.stat4)
-        item = Item.objects.create(name = 'Gun')
+        item = Item.objects.create(name='Gun')
         item.kind.create(name='range_wapon')
+        range_damage = StatsType.objects.create(name='range_damage')
+        range_damage_gun_stat = Stat.objects.create(name=range_damage)
+        range_damage_gun_stat.base = 100
+        range_damage_gun_stat.save()
+        item.stats.add(range_damage_gun_stat)
+        self.hero.equiped_items.add(item)
+        self.hero.setattr('power', 'base', 10)
         self.hero.save()
                 
         Formula.objects.create(text='5')
@@ -36,12 +43,10 @@ class SimpleTest(TestCase):
         Formula.objects.create(text='5 + log ( 2 , 4 ) * 2')
         Formula.objects.create(text='user.lvl')
         Formula.objects.create(text='2 * user.lvl ^ 2')
+        Formula.objects.create(text='user.power')
         Formula.objects.create(text='target.range_wapon-range_damage')
         Formula.objects.create(text='5 * target.range_wapon-range_damage ^ 2')
         self.fo = Formula.objects.all()
-        
-    def test_get_item(self):
-        pass
         
     def test_formula_create_RPN(self):
         self.assertEqual(self.fo[0].RPN, [5])
@@ -57,8 +62,9 @@ class SimpleTest(TestCase):
         self.assertEqual(self.fo[10].RPN, [5, 2, 4, 'log', 2, '*', '+'])
         self.assertEqual(self.fo[11].RPN, [('user', None, 'lvl')])
         self.assertEqual(self.fo[12].RPN, [2, ('user', None, 'lvl'), 2, '^', '*'])
-        self.assertEqual(self.fo[13].RPN, [('target', 'range_wapon', 'range_damage')])
-        self.assertEqual(self.fo[14].RPN, [5, ('target', 'range_wapon', 'range_damage'), 2, '^', '*'])
+        self.assertEqual(self.fo[13].RPN, [('user', None, 'power')])
+        self.assertEqual(self.fo[14].RPN, [('target', 'range_wapon', 'range_damage')])
+        self.assertEqual(self.fo[15].RPN, [5, ('target', 'range_wapon', 'range_damage'), 2, '^', '*'])
 
     
     def test_formula_calculate(self):
@@ -75,11 +81,14 @@ class SimpleTest(TestCase):
         self.assertEqual(self.fo[10].calculate(self.hero, self.hero), 9)
         self.assertEqual(self.fo[11].calculate(self.hero, self.hero), 2)
         self.assertEqual(self.fo[12].calculate(self.hero, self.hero), 8)
+        self.assertEqual(self.fo[13].calculate(self.hero, self.hero), 10)
+        self.assertEqual(self.fo[14].calculate(self.hero, self.hero), 100)
+        self.assertEqual(self.fo[15].calculate(self.hero, self.hero), 50000)
         
     def calculate_random_test(self, n, min, max):
         for i in range(1, 100):
             t = self.fo[n].calculate(self.hero, self.hero)
-            if t<min or t>max:
+            if t < min or t > max:
                 return False
         else:
             return True
