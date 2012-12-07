@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.static import *
 from django.conf import settings
 from registration.views import AccountRegistration,RegistrationOver
+
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -23,4 +24,6 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
 
     ('^registration/$', AccountRegistration),
     ('^registration_ok/$', RegistrationOver.as_view()),
+    (r'^login/$', 'auth.views.login_user'),
+    (r'^logout/$', 'auth.views.logout_user'),
 )
