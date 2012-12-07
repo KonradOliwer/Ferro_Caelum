@@ -2,6 +2,7 @@
 from django.test import TestCase
 from hero.stats_and_abstract import *
 from hero.models import *
+import decimal 
 
 class SimpleTest(TestCase):
     def setUp(self):
@@ -46,6 +47,7 @@ class SimpleTest(TestCase):
         Formula.objects.create(text='user.power')
         Formula.objects.create(text='target.range_wapon-range_damage')
         Formula.objects.create(text='5 * target.range_wapon-range_damage ^ 2')
+        Formula.objects.create(text='5 * target.range_wapon-range_damage ^ 2')
         self.fo = Formula.objects.all()
         
     def test_formula_create_RPN(self):
@@ -65,7 +67,6 @@ class SimpleTest(TestCase):
         self.assertEqual(self.fo[13].RPN, [('user', None, 'power')])
         self.assertEqual(self.fo[14].RPN, [('target', 'range_wapon', 'range_damage')])
         self.assertEqual(self.fo[15].RPN, [5, ('target', 'range_wapon', 'range_damage'), 2, '^', '*'])
-
     
     def test_formula_calculate(self):
         self.assertEqual(self.fo[0].calculate(self.hero, self.hero), 5)

@@ -1,6 +1,8 @@
 # coding: utf-8
 from django.db import models
-from hero.stats_and_abstract import *
+from dics import *
+from condition import Condition
+from stats import Stat
 
 class Effect(models.Model):
     stat = models.ForeignKey(StatsType)
@@ -96,6 +98,9 @@ class Hero(Fighter):
     def get_item_stat(self, item_name, stat_name, kind = None):
         try:
             item = self.equiped_items.get(kind__name = item_name)
-        except DoesNotExists:
-            item = self.equiped_items.get(name = item_name)
+        except Hero.DoesNotExists:
+            try:
+                item = self.equiped_items.get(name = item_name)
+            except Hero.DoesNotExists:
+                return None
         return item.getattr(stat_name, kind)

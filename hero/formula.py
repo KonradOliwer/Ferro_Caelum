@@ -18,14 +18,18 @@ import math
 #===============================================================================
 
 class Formula(models.Model):
+    """Zapis wzorów w systemie"""
     text = models.CharField(max_length=100)
-    operators = {'': (-5,), '(': (0,), ')': (0,), '+': (5, lambda a, b: a + b),
-                          '-': (5, lambda a, b: a - b), '*': (10, lambda a, b: a * b),
-                          '/': (10, lambda a, b: a / b), 
-                          '^': (15, lambda a, b: decimal.Decimal(math.pow(a, b))),
-                          '-u': (17, lambda a:-a),
-                          'random': (20, lambda a, b: random.randint(int(a), int(b))),
-                          'log': (20, lambda base, a: decimal.Decimal(math.log(a, base)))}
+    _operators = {#'nazwa': (priorytet, funkcja)
+                  '': (-5,), '(': (0,),
+                   ')': (0,),       
+                  '+': (5, lambda a, b: a + b),
+                  '*': (10, lambda a, b: a * b),
+                  '/': (10, lambda a, b: a / b), 
+                  '^': (15, lambda a, b: decimal.Decimal(math.pow(a, b))),
+                  '-u': (17, lambda a:-a),
+                  'random': (20, lambda a, b: random.randint(int(a), int(b))),
+                  'log': (20, lambda base, a: decimal.Decimal(math.log(a, base)))}
     
     def __init__(self, *args, **kwargs):
         super(Formula, self).__init__(*args, **kwargs)
@@ -62,13 +66,16 @@ class Formula(models.Model):
         self.RPN = output
     
     def _get_priority(self, operator):
-        return self.operators[operator][0]
+        """Dostarcza priorytet wskazanego operatora"""
+        return self._operators[operator][0]
     
     def _get_function(self, operator):
-        return self.operators[operator][1]
+        """Dostarcza funckję rperezentowaną przez wskazany operator"""
+        return self._operators[operator][1]
     
     def _hendle_operator(self, token, stack, user, target):
-        if not token in self.operators:
+        """Obsługuje elementy będące operatorami"""
+        if not token in self._operators:
             return False
         arg = self._get_value(stack.pop(), user, target)
         if token == '-u':
@@ -79,6 +86,7 @@ class Formula(models.Model):
         return True
                                                
     def _get_value(self, token, u, t):
+        """Pobiera wartość pola z bazy danych"""
         try:
             token + 1
             return token
@@ -86,17 +94,18 @@ class Formula(models.Model):
             target, item, stat = token
             if item is None:
                 if target=='target':
-                    return getattr(t, 'getattr')(stat)
+                    return decimal.Decimal(getattr(t, 'getattr')(stat) or 0)
                 else:
-                    return getattr(u, 'getattr')(stat)
+                    return decimal.Decimal(getattr(u, 'getattr')(stat) or 0)
             else:
                 if target=='target':
-                    return getattr(t, 'get_item_stat')(item, stat)
+                    return decimal.Decimal(getattr(t, 'get_item_stat')(item, stat) or 0)
                 else:
-                    return getattr(u, 'get_item_stat')(item, stat)
+                    return decimal.Decimal(getattr(u, 'get_item_stat')(item, stat) or 0)
         
     def _add_operator(self, c, output, operators_stack, right):
-        if not c in self.operators:
+        """Obsługuje dodawnie operatorów do RPN"""
+        if not c in self._operators:
             return False  
         if c == '(':
             operators_stack.append(c)
@@ -117,6 +126,7 @@ class Formula(models.Model):
         return True                
     
     def _add_number(self, c, output):
+        """Obsługuje dodawanie liczb do RPN"""
         try:
             output.append(decimal.Decimal(c))
             return True
@@ -124,6 +134,7 @@ class Formula(models.Model):
             return False
         
     def _add_reference(self, c, output):
+        """Obsługuje dodawanie odwołania do pola w bazie danych do RPN"""
         try:
             target, atribute = c.split('.')
             try:
