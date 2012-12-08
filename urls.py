@@ -24,12 +24,12 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
 
     ('^registration/$', AccountRegistration),
     ('^registration_ok/$', RegistrationOver.as_view()),
-    (r'^login/$', 'auth.views.login_user'),
-    (r'^logout/$', 'auth.views.logout_user'),
+    (r'^login/$', 'authorization.views.login_user'),
+    (r'^logout/$', 'authorization.views.logout_user'),
     #mejle
-    (r'^inbox/$', 'mail.views.inbox'),
-    (r'^outbox/$', 'mail.views.outbox'),
-     url(r'^view/(?P<message_id>[\d]+)/$', 'mail.views.view', name='messages_detail'),
-    (r'^new_mail/$', 'mail.views.compose'),
+    (r'^inbox/$', 'message_system.views.inbox'),
+    (r'^outbox/$', 'message_system.views.outbox'),
+     url(r'^mail_view/(?P<message_id>[\d]+)/$', 'message_system.views.view', name='messages_detail'),
+    (r'^new_mail/$', 'message_system.views.compose'),
 
 )

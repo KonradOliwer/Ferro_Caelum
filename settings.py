@@ -129,7 +129,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'hero',
     'user_profile',
-    'mail',
+    'message_system',
 )
 
 # A sample logging configuration. The only tangible logging

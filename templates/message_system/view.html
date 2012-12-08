@@ -7,13 +7,11 @@
 <body>
 <dl class="message-headers">
     <dt>Nadawca</dt>
-    <dd><strong>{{ message.subject }}</strong></dd>
-    <dt>Temat</dt>
     <dd>{{ message.author }}</dd>
+    <dt>Temat</dt>
+    <dd><strong>{{ message.subject }}</strong></dd>
     <dt>Data </dt>
     <dd>{{ message.date_sent|date:_("DATETIME_FORMAT")}}</dd>
-    <dt>Odbiorca</dt>
-    <dd>{{ message.receiver }}</dd>
     <dt>Treść</dt>
     <dd>{{ message.text|linebreaksbr }}</dd>
 </dl>

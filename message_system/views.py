@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
-from mail.models import Message
-from mail.forms import ComposeForm
+from message_system.models import Message
+from message_system.forms import ComposeForm
 
 def inbox(request):
     """
     Skrzynka odbiorcza
     """
     message_list = Message.objects.inbox_for(request.user)
-    return render_to_response('mail/inbox.html', {
+    return render_to_response('message_system/inbox.html', {
         'message_list': message_list,
         }, context_instance=RequestContext(request))
 
@@ -23,7 +23,7 @@ def outbox(request):
     Skrzynka nadawcza
     """
     message_list = Message.objects.outbox_for(request.user)
-    return render_to_response('mail/outbox.html', {
+    return render_to_response('message_system/outbox.html', {
         'message_list': message_list,
         }, context_instance=RequestContext(request))
 
@@ -38,13 +38,13 @@ def view(request, message_id):
     if message.read == False and message.receiver == user:
         message.read=True
         message.save()
-    return render_to_response('mail/view.html', {
+    return render_to_response('message_system/view.html', {
         'message': message,
         }, context_instance=RequestContext(request))
 view = login_required(view)
 
 def compose(request, recipient=None, form_class=ComposeForm,
-            template_name='mail/compose.html'):
+            template_name='message_system/compose.html'):
     """
     Komponowanie wiadomości elektronicznej
     """

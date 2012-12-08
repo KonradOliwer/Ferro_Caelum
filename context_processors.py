@@ -1,4 +1,4 @@
-from mail.models import inbox_count_for
+from message_system.models import inbox_count_for
 
 def inbox(request):
     if request.user.is_authenticated():

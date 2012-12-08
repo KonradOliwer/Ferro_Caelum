@@ -2,7 +2,7 @@
 import datetime
 from django import forms
 from django.contrib.auth.models import User
-from mail.models import Message
+from message_system.models import Message
 
 class ComposeForm(forms.Form):
     """
