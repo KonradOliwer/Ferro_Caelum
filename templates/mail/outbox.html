@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
+</head>
+<body>
+<h1>Wysłane </h1>
+{% if message_list %}
+    <table class="messages">
+        <thead>
+        <tr><th>Do</th><th>Temat</th><th>Data</th>
+            {#            <th>Akcja</th>#}
+        </tr>
+        </thead>
+        <tbody>
+        {% for message in message_list %}
+            <tr>
+                <td>{{ message.receiver }}</td>
+                <td>
+                    {% if not message.read %}<b>{% endif %}
+                    <a href="{{message.get_absolute_url }}">{{ message.subject }}</a>
+                    {% if not message.read %}</b>{% endif %}</td>
+                <td>{{ message.date_sent|date:_("DATETIME_FORMAT") }}</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Brak wiadomości</p>
+{% endif %}
+</body>
+</html>

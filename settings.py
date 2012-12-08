@@ -1,5 +1,6 @@
 import os
 import sys
+import django.conf.global_settings as DEFAULT_SETTINGS
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_PATH)
@@ -128,6 +129,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'hero',
     'user_profile',
+    'mail',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -158,5 +160,8 @@ LOGGING = {
         },
     }
 }
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'context_processors.inbox',
+    )
 
 

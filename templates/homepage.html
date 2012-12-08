@@ -5,12 +5,24 @@
     <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
 </head>
 <body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% if user.is_authenticated %}
 
     <h1>Witaj, {{ user.username }}.</h1>
         <!--
         Menu zalogowanego uzytkownika
         -->
+    <details><summary>Poczta <a href="inbox">({{ inbox_count }})</a></summary>
+        <a href="inbox">Skrzynka odbiorcza</a><br>
+        <a href="outbox">Wysłane</a><br>
+        <a href="new_mail">Napisz</a><br>
+    </details>
     <a href="logout">Wyloguj</a>
     {% else %}
 

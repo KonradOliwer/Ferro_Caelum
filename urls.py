@@ -26,4 +26,10 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
     ('^registration_ok/$', RegistrationOver.as_view()),
     (r'^login/$', 'auth.views.login_user'),
     (r'^logout/$', 'auth.views.logout_user'),
+    #mejle
+    (r'^inbox/$', 'mail.views.inbox'),
+    (r'^outbox/$', 'mail.views.outbox'),
+     url(r'^view/(?P<message_id>[\d]+)/$', 'mail.views.view', name='messages_detail'),
+    (r'^new_mail/$', 'mail.views.compose'),
+
 )
