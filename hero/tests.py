@@ -6,6 +6,7 @@ import decimal
 
 class SimpleTest(TestCase):
     def setUp(self):
+        fixtures = ['initial_data.json']
         self.bloodline = BloodLine.objects.create(name="Gangrel")
         self.profession = Profession.objects.create(name="Rybak")
         self.hero = Hero.objects.create(name=u"Stefań",

@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.db.models import signals
 from django.db import models
-from hero.dics import *
+#from hero.dics import *
 import decimal 
 import random
 import math
@@ -31,9 +31,9 @@ class Formula(models.Model):
                   'random': (20, lambda a, b: random.randint(int(a), int(b))),
                   'log': (20, lambda base, a: decimal.Decimal(math.log(a, base)))}
     
-    def __init__(self, *args, **kwargs):
-        super(Formula, self).__init__(*args, **kwargs)
-        self.create_RPN()
+#    def __init__(self, *args, **kwargs):
+#        super(Formula, self).__init__(*args, **kwargs)
+#        self.create_RPN()
     
     def calculate(self, user, target):
         """Wykorzystuje wzór do obliczenia wartości dla zadanego celu i osoby aktywującej"""

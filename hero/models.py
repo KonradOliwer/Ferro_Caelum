@@ -3,6 +3,7 @@ from django.db import models
 from dics import *
 from condition import Condition
 from stats import Stat
+from bars import Bar
 
 class Effect(models.Model):
     stat = models.ForeignKey(StatsType)
@@ -16,11 +17,18 @@ class Ability(models.Model):
     effects = models.ManyToManyField(Effect)
     
 class Fighter(models.Model):
+    packages = models.ManyToManyField(Package)
     name = models.CharField(max_length=50)
     lvl = models.PositiveSmallIntegerField(default=1)
-    package = models.ManyToManyField(Package)
     stats = models.ManyToManyField(Stat)
+    bars = models.ManyToManyField(Bar)
     ability = models.ManyToManyField(Ability)
+    
+#        self.add_package(Package.objects.get(name='wojownik'))
+    def save(self, *args, **kwargs):
+        super(Fighter, self).save(*args, **kwargs)
+        package = Package.objects.get(name='wojownik')
+        self.add_package(package)
          
     def setattr(self, name, kind, value_change):
         try:
@@ -42,11 +50,11 @@ class Fighter(models.Model):
     def get_item_stat(self):
         return None
     
-    def __unicode__(self):
-        return u'%s' % self.name 
+    def add_package(self, package):
+        package.add_package(self)
     
-class Slot(models.Model):
-    name = models.CharField(max_length=50)
+    def __unicode__(self):
+        return u'%s' % self.name
     
 class Item(models.Model):
     name = models.CharField(max_length=50)
@@ -92,15 +100,17 @@ class Hero(Fighter):
     can_figth = models.BooleanField(default=True)
     energy = models.PositiveIntegerField(default=10)
     current_energy = models.PositiveIntegerField(default=10)
-    equiped_items =  models.ManyToManyField(Item, related_name = 'equiped')
-    items =  models.ManyToManyField(Item, related_name = 'unequiped')
+    equiped_items = models.ManyToManyField(Item, related_name='equiped')
+    items = models.ManyToManyField(Item, related_name='unequiped')
+
+#        self.add_package(Package.objects.get(name='bohater'))
     
-    def get_item_stat(self, item_name, stat_name, kind = None):
+    def get_item_stat(self, item_name, stat_name, kind=None):
         try:
-            item = self.equiped_items.get(kind__name = item_name)
+            item = self.equiped_items.get(kind__name=item_name)
         except Hero.DoesNotExists:
             try:
-                item = self.equiped_items.get(name = item_name)
+                item = self.equiped_items.get(name=item_name)
             except Hero.DoesNotExists:
                 return None
         return item.getattr(stat_name, kind)

@@ -1,10 +1,9 @@
-# coding=utf-8
+# coding: utf-8
 from django.db import models
 
 from django.contrib.auth.models import User
 from hero.models import Hero
 
 class UserProfile(models.Model):
-   # hero = models.ForeignKey(Hero)         # v dopóki hero nie ma tworzenia
-    hero = models.CharField(max_length=50)  # tymczasowo....
+    hero = models.OneToOneField(Hero, null=True)
     user = models.ForeignKey(User, unique=True)

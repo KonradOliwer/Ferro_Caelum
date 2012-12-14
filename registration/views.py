@@ -17,7 +17,7 @@ def AccountRegistration(request):
             user = User.objects.create_user(username=form.cleaned_data['username'], email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'])
             user.save()
-            account = UserProfile(hero = form.cleaned_data.get('hero'),user=user)
+            account = UserProfile(user=user)
 
             account.save()
             return HttpResponseRedirect('/registration_ok/')

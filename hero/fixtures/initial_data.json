@@ -1,0 +1,126 @@
+[
+  {
+    "model": "hero.formula",
+    "pk": 1,
+    "fields": {
+      "text": "0.8 * moc + 0.2 * precyzja"
+    }
+  },
+  {
+    "model": "hero.formula",
+    "pk": 2,
+    "fields": {
+      "text": "0.2 * moc + 0.8 * precyzja"
+    }
+  },
+  {
+    "model": "hero.StatsType",
+    "pk": 1,
+    "fields": {
+      "name": "moc",
+      "description": "opis",
+      "formula": null
+    }
+  },
+  {
+    "model": "hero.StatsType",
+    "pk": 2,
+    "fields": {
+      "name": "percepcja",
+      "description": "opis",
+      "formula": null
+    }
+  },
+  {
+    "model": "hero.StatsType",
+    "pk": 3,
+    "fields": {
+      "name": "atak wręcz",
+      "description": "opis",
+      "formula": 1
+    }
+  },
+  {
+    "model": "hero.StatsType",
+    "pk": 4,
+    "fields": {
+      "name": "atak dystansowy",
+      "description": "opis",
+      "formula": 2
+    }
+  },
+  {
+    "model": "hero.Slot",
+    "pk": 1,
+    "fields": {
+      "name": "wapon"
+    }
+  },
+  {
+    "model": "hero.package",
+    "pk": 1,
+    "fields": {
+      "name": "wojownik",
+      "stats": [1,2,3,4],
+      "slots": []
+    }
+  },
+  {
+    "model": "hero.package",
+    "pk": 2,
+    "fields": {
+      "name": "bohater",
+      "stats": [],
+      "slots": [1]
+    }
+  },
+  {
+    "model": "hero.bloodline",
+    "pk": 1,
+    "fields": {
+      "name": "Mieszaniec"
+    }
+  },
+  {
+    "model": "hero.bloodline",
+    "pk": 2,
+    "fields": {
+      "name": "Taheiri"
+    }
+  },
+  {
+    "model": "hero.bloodline",
+    "pk": 3,
+    "fields": {
+      "name": "Aladri"
+    }
+  },
+  {
+    "model": "hero.profession",
+    "pk": 1,
+    "fields": {
+      "name": "rycerz"
+    }
+  },
+  {
+    "model": "hero.profession",
+    "pk": 2,
+    "fields": {
+      "name": "strzelec"
+    }
+  },
+  {
+    "model": "hero.profession",
+    "pk": 3,
+    "fields": {
+      "name": "programista"
+    }
+  },
+  {
+    "model": "hero.profession",
+    "pk": 4,
+    "fields": {
+      "name": "sieciowiec"
+    }
+  }
+]
