@@ -5,6 +5,23 @@ from condition import Condition
 from stats import Stat
 from bars import Bar
 
+def add_package(package, target):
+    """Dodaje celowi pakiet i dostarcza wszystkich w nim zawartych elementów"""
+    if not package in target.packages.all():
+        target.packages.add(package)
+        stats = package.stats.all()
+        for stat_name in stats:
+            stat = Stat.objects.create(name=stat_name)
+            target.stats.add(stat)
+        slots = package.slots.all()
+        for slot in slots:
+            target.slots.add(slot)    
+        bars = package.bars.all()
+        for bar_name in bars:
+            bar = Bar.objects.create(name=bar_name)
+            target.bars.add(bar)
+
+
 class Effect(models.Model):
     stat = models.ForeignKey(StatsType)
     additive = models.BooleanField(default=True)
@@ -24,11 +41,10 @@ class Fighter(models.Model):
     bars = models.ManyToManyField(Bar)
     ability = models.ManyToManyField(Ability)
     
-#        self.add_package(Package.objects.get(name='wojownik'))
     def save(self, *args, **kwargs):
         super(Fighter, self).save(*args, **kwargs)
         package = Package.objects.get(name='wojownik')
-        self.add_package(package)
+        add_package(package, self)
          
     def setattr(self, name, kind, value_change):
         try:
@@ -51,7 +67,7 @@ class Fighter(models.Model):
         return None
     
     def add_package(self, package):
-        package.add_package(self)
+        add_package(self)
     
     def __unicode__(self):
         return u'%s' % self.name
@@ -102,8 +118,11 @@ class Hero(Fighter):
     current_energy = models.PositiveIntegerField(default=10)
     equiped_items = models.ManyToManyField(Item, related_name='equiped')
     items = models.ManyToManyField(Item, related_name='unequiped')
-
-#        self.add_package(Package.objects.get(name='bohater'))
+    
+    def save(self, *args, **kwargs):
+        super(Fighter, self).save(*args, **kwargs)
+        package = Package.objects.get(name='bohater')
+        add_package(package, self)
     
     def get_item_stat(self, item_name, stat_name, kind=None):
         try:

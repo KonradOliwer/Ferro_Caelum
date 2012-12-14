@@ -31,10 +31,6 @@ class Formula(models.Model):
                   'random': (20, lambda a, b: random.randint(int(a), int(b))),
                   'log': (20, lambda base, a: decimal.Decimal(math.log(a, base)))}
     
-#    def __init__(self, *args, **kwargs):
-#        super(Formula, self).__init__(*args, **kwargs)
-#        self.create_RPN()
-    
     def calculate(self, user, target):
         """Wykorzystuje wzór do obliczenia wartości dla zadanego celu i osoby aktywującej"""
         stack = []
@@ -47,9 +43,7 @@ class Formula(models.Model):
     
     def create_RPN(self):
         """Zmienia wzór zapisany w sposób standardowy w odwróconą polską notację"""     
-        signals.post_init.send(sender=self.__class__, instance=self)
-        right_to_left = ['^', '-u']
-        
+        right_to_left = ['^', '-u'] 
         input = self.text.replace(',', ') (')
         if input[0] == '-':
             input = '-u' + input[1:]
@@ -153,4 +147,8 @@ class Formula(models.Model):
         except IndexError:
             return ''
     
+def text_decoder(instance, **kwargs):
+    instance.create_RPN()
+
+models.signals.post_init.connect(text_decoder, Formula)    
     

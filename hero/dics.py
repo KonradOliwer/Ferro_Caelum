@@ -18,12 +18,7 @@ class Package(models.Model):
     name = models.CharField(max_length=50)
     stats = models.ManyToManyField(StatsType)
     slots = models.ManyToManyField(Slot)
-    
-    def add_package(self, target):
-        """Dodaje celowi pakiet"""
-        target.packages.add(self)
-        target.stats.add(self.stats)
-        target.slots.add(self.slots)
+    bars = models.ManyToManyField(BarsType)
     
     def __unicode__(self):
         return u'Pakiet: %s' % self.name

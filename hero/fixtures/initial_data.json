@@ -3,14 +3,14 @@
     "model": "hero.formula",
     "pk": 1,
     "fields": {
-      "text": "0.8 * moc + 0.2 * precyzja"
+      "text": "0.8 * user.moc + 0.2 * user.precyzja"
     }
   },
   {
     "model": "hero.formula",
     "pk": 2,
     "fields": {
-      "text": "0.2 * moc + 0.8 * precyzja"
+      "text": "0.2 * user.moc + 0.8 * user.precyzja"
     }
   },
   {
@@ -62,7 +62,8 @@
     "fields": {
       "name": "wojownik",
       "stats": [1,2,3,4],
-      "slots": []
+      "slots": [],
+      "bars": []
     }
   },
   {
@@ -71,7 +72,8 @@
     "fields": {
       "name": "bohater",
       "stats": [],
-      "slots": [1]
+      "slots": [1],
+      "bars": []
     }
   },
   {
