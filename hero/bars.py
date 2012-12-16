@@ -6,10 +6,11 @@ from hero.formula import *
 
 class Bar(models.Model):
     name = models.ForeignKey(BarsType)
-    current = models.IntegerField(default=0)
-    base_max = models.IntegerField(default=10)
+    current = models.PositiveIntegerField(default=10)
+    base_max = models.PositiveIntegerField(default=10)
     additive_max = models.IntegerField(default=0)
     percent_max = models.PositiveIntegerField(default=0)
+    regeneration = models.PositiveIntegerField(default=0)
     
     def current_max_value(self):
         """Wartość faktyczna - wyliczona na podstaiwe trzech podtawowych parametrów (additive, percent, base)"""

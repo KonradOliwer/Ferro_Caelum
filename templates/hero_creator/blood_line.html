@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tworzenie bohater - wybór linii krwii</title>
+		<link rel = "stylesheet" type = "text/css" href = "/media/style.css">
+	</head>
+	<body>
+		{% if blood_line_list %}
+		<form action="" method="post">
+			<ul>
+				{% for blood_line in blood_line_list %}
+				<li>
+					<input type="radio" name="blood_line" value="{{ blood_line.id }}">
+					{{ blood_line.name }}
+				</li>
+				{% endfor %}
+			</ul>
+			<input type="submit" value="Dalej"/>
+		</form>
+		{% else %}
+		<p>
+			Nie istnieje ani jedna linii krwi w bazie danych.
+		</p>
+		{% endif %}
+	</body>
+</html>
