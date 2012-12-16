@@ -26,7 +26,7 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
     ('^registration_ok/$', RegistrationOver.as_view()),
     (r'^login/$', 'authorization.views.login_user'),
     (r'^logout/$', 'authorization.views.logout_user'),
-    url(r'^hero_creator/', include('hero_creator.urls')),
+    url(r'^hero_creator/$', include('hero_creator.urls')),
     #mejle
     (r'^inbox/$', 'message_system.views.inbox'),
     (r'^outbox/$', 'message_system.views.outbox'),
