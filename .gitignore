@@ -6,3 +6,4 @@ local_settings.py
 .pydevproject
 .settings
 ferro_caelum.sqlite
+*.bat

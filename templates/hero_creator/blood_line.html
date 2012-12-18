@@ -15,10 +15,11 @@
 				</li>
 				{% endfor %}
 			</ul>
+			<a href="{% url hero_creator.views.start %}"><input type="button" value="Cofnij"/></a>
 			<input type="submit" value="Dalej"/>
 		</form>
 		{% else %}
-		<p>
+		<p>5
 			Nie istnieje ani jedna linii krwi w bazie danych.
 		</p>
 		{% endif %}

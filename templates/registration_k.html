@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-    <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
-</head>
-<body>
-<p>Rejestracja pomyślna. Możesz teraz się zalogować.</p>
-</body>
+	<head>
+		<title>Rejestracja</title>
+		<link rel = "stylesheet" type = "text/css" href = "/media/style.css">
+	</head>
+	<body>
+		<p>
+			Rejestracja pomyślna. Możesz teraz się zalogować.
+		</p>
+		<p>
+			Przejdź do tworzenia bohatera:
+		</p>
+		<a href="{% url hero_creator.views.start %}">
+		<input type="button" value="Dalej"/>
+		</a>
+	</body>
 </html>
