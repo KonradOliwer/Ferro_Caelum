@@ -87,6 +87,8 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'z8ti7i5#(a66qo&amp;t&amp;g)c1&amp;jr+=l%a61a_r6=*wuhf@z*#i@9@9'
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
