@@ -14,39 +14,43 @@
     }
   },
   {
-    "model": "hero.StatsType",
+    "model": "hero.AtributType",
     "pk": 1,
     "fields": {
       "name": "moc",
       "description": "opis",
-      "formula": null
+      "formula": null,
+      "kind": 1
     }
   },
   {
-    "model": "hero.StatsType",
+    "model": "hero.AtributType",
     "pk": 2,
     "fields": {
       "name": "percepcja",
       "description": "opis",
-      "formula": null
+      "formula": null,
+      "kind": 1
     }
   },
   {
-    "model": "hero.StatsType",
+    "model": "hero.AtributType",
     "pk": 3,
     "fields": {
       "name": "atak wręcz",
       "description": "opis",
-      "formula": 1
+      "formula": 1,
+      "kind": 1
     }
   },
   {
-    "model": "hero.StatsType",
+    "model": "hero.AtributType",
     "pk": 4,
     "fields": {
       "name": "atak dystansowy",
       "description": "opis",
-      "formula": 2
+      "formula": 2,
+      "kind": 1
     }
   },
   {
@@ -61,9 +65,8 @@
     "pk": 1,
     "fields": {
       "name": "wojownik",
-      "stats": [1,2,3,4],
-      "slots": [],
-      "bars": []
+      "atributs": [1,2,3,4],
+      "slots": []
     }
   },
   {
@@ -71,9 +74,8 @@
     "pk": 2,
     "fields": {
       "name": "bohater",
-      "stats": [],
-      "slots": [1],
-      "bars": []
+      "atributs": [],
+      "slots": [1]
     }
   },
   {

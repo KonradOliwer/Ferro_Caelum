@@ -1,7 +1,6 @@
 # coding: utf-8
 from django.db.models import signals
 from django.db import models
-#from hero.dics import *
 import decimal 
 import random
 import math

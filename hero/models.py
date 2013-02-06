@@ -2,28 +2,27 @@
 from django.db import models
 from dics import *
 from condition import Condition
-from stats import Stat
-from bars import Bar
+from atributs import *
 
 def add_package(package, target):
     """Dodaje celowi pakiet i dostarcza wszystkich w nim zawartych elementów"""
     if not package in target.packages.all():
         target.packages.add(package)
-        stats = package.stats.all()
-        for stat_name in stats:
-            stat = Stat.objects.create(name=stat_name)
-            target.stats.add(stat)
+        atributs = package.atributs.all()
+        for atributstat_name in atributs:
+            if (atributstat_name.kind == "stat"):
+                stat = Stat.objects.create(name=atribut_name)
+                target.stats.add(stat)
+            else:
+                bar = Bar.objects.create(name=atribut_name)
+                target.stats.add(bar)
         slots = package.slots.all()
         for slot in slots:
-            target.slots.add(slot)    
-        bars = package.bars.all()
-        for bar_name in bars:
-            bar = Bar.objects.create(name=bar_name)
-            target.bars.add(bar)
+            target.slots.add(slot)
 
 
 class Effect(models.Model):
-    stat = models.ForeignKey(StatsType)
+    atribut = models.ForeignKey(AtributType)
     additive = models.BooleanField(default=True)
 
 class Ability(models.Model):

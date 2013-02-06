@@ -1,6 +1,5 @@
 # coding: utf-8
 from django.test import TestCase
-from hero.stats_and_abstract import *
 from hero.models import *
 import decimal 
 
@@ -12,10 +11,10 @@ class SimpleTest(TestCase):
         self.hero = Hero.objects.create(name=u"Stefań",
             bloodline=self.bloodline, profession=self.profession)
         self.hero.lvl = 2
-        self.type1 = StatsType.objects.create(name="power")
-        self.type2 = StatsType.objects.create(name="dexterity")
-        self.type3 = StatsType.objects.create(name="web")
-        self.type4 = StatsType.objects.create(name="inteligence")
+        self.type1 = AtributType.objects.create(name="power")
+        self.type2 = AtributType.objects.create(name="dexterity")
+        self.type3 = AtributType.objects.create(name="web")
+        self.type4 = AtributType.objects.create(name="inteligence")
         self.stat1 = Stat.objects.create(name=self.type1)
         self.stat2 = Stat.objects.create(name=self.type2)
         self.stat3 = Stat.objects.create(name=self.type3)
@@ -23,7 +22,7 @@ class SimpleTest(TestCase):
         self.hero.stats.add(self.stat1, self.stat2, self.stat3, self.stat4)
         item = Item.objects.create(name='Gun')
         item.kind.create(name='range_wapon')
-        range_damage = StatsType.objects.create(name='range_damage')
+        range_damage = AtributType.objects.create(name='range_damage')
         range_damage_gun_stat = Stat.objects.create(name=range_damage)
         range_damage_gun_stat.base = 100
         range_damage_gun_stat.save()
