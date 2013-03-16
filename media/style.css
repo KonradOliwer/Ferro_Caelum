@@ -8,3 +8,4 @@ table.hero_creator{width: 100%; padding: 10px;}
 .hero_creator_center{width: 50%;padding: 10px;}
 .hero_creator_left{width: 20%;padding: 10px;}
 .hero_creator_right{width: 30%;padding: 10px;}
+.hidden{visibility:hidden;}

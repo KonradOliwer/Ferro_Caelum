@@ -82,49 +82,56 @@
     "model": "hero.bloodline",
     "pk": 1,
     "fields": {
-      "name": "Mieszaniec"
+      "name": "Mieszaniec",
+      "description": "Opis mieszańców"
     }
   },
   {
     "model": "hero.bloodline",
     "pk": 2,
     "fields": {
-      "name": "Taheiri"
+      "name": "Taheiri",
+      "description": "Opis taheiritów"
     }
   },
   {
     "model": "hero.bloodline",
     "pk": 3,
     "fields": {
-      "name": "Aladri"
+      "name": "Aladri",
+      "description": "Opis aladirów"
     }
   },
   {
     "model": "hero.profession",
     "pk": 1,
     "fields": {
-      "name": "rycerz"
+      "name": "rycerz",
+      "description": "Opis rycerzy"
     }
   },
   {
     "model": "hero.profession",
     "pk": 2,
     "fields": {
-      "name": "strzelec"
+      "name": "strzelec",
+      "description": "Opis strzelców"
     }
   },
   {
     "model": "hero.profession",
     "pk": 3,
     "fields": {
-      "name": "programista"
+      "name": "programista",
+      "description": "Opis programistów"
     }
   },
   {
     "model": "hero.profession",
     "pk": 4,
     "fields": {
-      "name": "sieciowiec"
+      "name": "sieciowiec",
+      "description": "Opis sieciorców"
     }
   }
 ]

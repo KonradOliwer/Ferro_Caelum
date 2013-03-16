@@ -3,6 +3,7 @@
 <head>
     <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
     <title>{% block title %}Tworzenie bohatera{% endblock %}</title>
+    {% block script %}{% endblock %}
 </head>
 
 <body>
@@ -16,5 +17,6 @@
 		<td class="hero_creator_right">{% block right %}{% endblock %}</td>
 	</tr>
 	<table>
+{% block hidden %}{% endblock %}
 </body>
 </html>

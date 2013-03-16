@@ -1,5 +1,32 @@
 {% extends "hero_creator\base_choose.html" %}
 
+{% block script %}
+<script>
+function objectDescriptionShow(id)
+{
+	var elm = document.getElementById("des "+id);
+	var div = document.getElementById("div_right");
+	div.innerHTML = elm.innerHTML;
+}
+function init(){
+	var picked_id = "{{ picked_id }}"
+	if (picked_id != "None"){
+		objectDescriptionShow("{{ picked_id }}");
+	}else{
+		var radios = document.getElementsByName('object');
+		var value = 1;
+		for (var i = 0; i < radios.length; i++) {
+		    if (radios[i].checked) {
+        		value = radios[i].id;
+    		}
+		}
+		objectDescriptionShow(value);
+	}
+}
+window.addEventListener("load", init);
+</script>
+{% endblock %}
+
 {% block description %}{{ description }}{% endblock %}
 
 {% block choose %}
@@ -8,9 +35,9 @@
 	{% for element in objects_list %}
 	<li>	
 		{% if picked_id %}
-		<input type="radio" name="object" value="{{ element.id }}" {% ifequal picked_id element.id %}checked="checked"{% endifequal %}>	
+		<input onclick='objectDescriptionShow("{{ element.id }}")' type="radio" name="object" value="{{ element.id }}" {% ifequal picked_id element.id %}checked="checked"{% endifequal %} id="{{ element.id }}">	
 		{% else %}
-		<input type="radio" name="object" value="{{ element.id }}" checked="checked">	
+		<input onclick='objectDescriptionShow("{{ element.id }}")' type="radio" name="object" value="{{ element.id }}" checked="checked" id="{{ element.id }}">	
 		{% endif %}
 		{{ element.name }}
 	</li>
@@ -18,5 +45,19 @@
 </ul>
 {% else %}
 	<p>{{ no_objects_mesage }}</p>
+{% endif %}
+{% endblock %}
+
+{% block right %}<div id="div_right">show picked item description</div>{% endblock %}
+
+{% block hidden %}
+{% if objects_list %}
+	{% for element in objects_list %}
+		<div class="hidden" id="des {{ element.id }}">
+			<p>Opis:</p>
+			<p>{{ element.description }}</p>
+		</div>
+	{% endfor %}
+{% else %}
 {% endif %}
 {% endblock %}

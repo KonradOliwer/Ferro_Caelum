@@ -103,9 +103,11 @@ class NPCFighter(Fighter):
 
 class BloodLine(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField()
 
 class Profession(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField()
 
 class Hero(Fighter):
     exp = models.PositiveIntegerField(default=0)
