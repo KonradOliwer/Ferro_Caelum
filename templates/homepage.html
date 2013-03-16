@@ -18,12 +18,12 @@
         <!--
         Menu zalogowanego uzytkownika
         -->
-    <details><summary>Poczta <a href="inbox">({{ inbox_count }})</a></summary>
-        <a href="inbox">Skrzynka odbiorcza</a><br>
-        <a href="outbox">Wysłane</a><br>
-        <a href="new_mail">Napisz</a><br>
+    <details><summary>Poczta <a href="mail/inbox">({{ inbox_count }})</a></summary>
+        <a href="mail/inbox">Skrzynka odbiorcza</a><br>
+        <a href="mail/outbox">Wysłane</a><br>
+        <a href="mail/new_mail">Napisz</a><br>
     </details>
-    <a href="logout">Wyloguj</a>
+    <a href="auth/logout">Wyloguj</a>
     {% else %}
 
     <h1>Witaj!</h1>
@@ -31,7 +31,7 @@
         Menu NIEzalogowanego uzytkownika
         -->
     <a href="registration">Rejestracja</a><br>
-    <a href="login">Logowanie</a>
+    <a href="auth/login">Logowanie</a>
     {% endif %}
 </body>
 </html>
