@@ -81,7 +81,7 @@ class Formula(models.Model):
     def _get_value(self, token, u, t):
         """Pobiera wartość pola z bazy danych"""
         try:
-            token + 1
+            token + 1337
             return token
         except TypeError:
             target, item, stat = token

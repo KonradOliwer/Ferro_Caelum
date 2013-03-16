@@ -1,0 +1,13 @@
+{% extends "hero_creator\base.html" %}
+
+{% block main %}
+<form action="{{ next_link }}" method="post">{% csrf_token %}
+	<p class="hero_creator_description">{% block description %}opis{% endblock %}</p>
+	<p class="hero_creator_main">{% block choose %}wybór{% endblock %}</p>
+	<p class="hero_creator_navigation">
+		<input type="button" value="Powrót" onClick="parent.location='{{ back_link }}'">
+		<input type="submit" name="next" value="Dalej" />
+	</p>
+</form>
+{% endblock %}
+

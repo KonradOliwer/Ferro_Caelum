@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Tworzenie bohater - wybór linii krwii</title>
-		<link rel = "stylesheet" type = "text/css" href = "/media/style.css">
-	</head>
-	<body>
-		<h1>Wprowadzenie do świata gry</h1>
-		<div class="small">
-			<a href="{{ 'blood_line' }}">pomiń</a>
-		</div>
-		<br>
-		<div>
-			Opis strony fabularnej - do dodania.
-		</div>
-		<div class="small">
-			<a href="{{ 'blood_line' }}"><input type="button" value="Dalej"/></a>
-		</div>
-	</body>
-</html>
+{% extends "hero_creator\base.html" %}
+
+{% block left %}
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek  
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek
+{% endblock %}
+
+{% block main %}
+opis fabularny opis fabularny opis fabularny opis fabularny opis fabularny
+opis fabularny opis fabularny opis fabularny opis fabularny opis fabularny
+opis fabularny opis fabularny opis fabularny opis fabularny opis fabularny
+{% endblock %}
+
+{% block nawigation %}
+<a href="/hero_creator/blood_line/"><button>Dalej</button></a>
+{% endblock %}
+
+{% block right %}
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek  
+obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek obrazek
+{% endblock %}

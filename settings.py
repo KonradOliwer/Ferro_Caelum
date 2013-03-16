@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'hero',
     'user_profile',
     'message_system',
+    'hero_creator',
 )
 
 # A sample logging configuration. The only tangible logging

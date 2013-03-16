@@ -4,3 +4,7 @@ a	{color: orange;text-decoration: none }
 ul,ol{list-style:none;margin:0;}
 .errorlist {color: #ffc200;font-weight:bold;font-size:85%; }
 .success {color: #53ff00;font-weight:bold;}
+table.hero_creator{width: 100%; padding: 10px;}
+.hero_creator_center{width: 50%;padding: 10px;}
+.hero_creator_left{width: 20%;padding: 10px;}
+.hero_creator_right{width: 30%;padding: 10px;}

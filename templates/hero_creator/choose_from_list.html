@@ -1,0 +1,22 @@
+{% extends "hero_creator\base_choose.html" %}
+
+{% block description %}{{ description }}{% endblock %}
+
+{% block choose %}
+{% if objects_list %}
+<ul>
+	{% for element in objects_list %}
+	<li>	
+		{% if picked_id %}
+		<input type="radio" name="object" value="{{ element.id }}" {% ifequal picked_id element.id %}checked="checked"{% endifequal %}>	
+		{% else %}
+		<input type="radio" name="object" value="{{ element.id }}" checked="checked">	
+		{% endif %}
+		{{ element.name }}
+	</li>
+	{% endfor %}
+</ul>
+{% else %}
+	<p>{{ no_objects_mesage }}</p>
+{% endif %}
+{% endblock %}

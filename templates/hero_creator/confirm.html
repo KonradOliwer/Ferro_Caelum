@@ -1,0 +1,14 @@
+{% extends "hero_creator\base.html" %}
+
+{% block main %}
+<form action="{{ next_link }}" method="post">{% csrf_token %}
+	<p class="hero_creator_description">Twój bohater będzie miał następujące statystyki:</p>
+	<p class="hero_creator_main">Linia krwii: {{ blood_line.name }}</p>
+	<p class="hero_creator_main">Profesja: {{ profession.name }}</p>
+	<p class="hero_creator_navigation">
+		<input type="button" value="Powrót" onClick="parent.location='{{ back_link }}'">
+		<input type="submit" name="next" value="Dalej" />
+	</p>
+</form>
+{% endblock %}
+
