@@ -7,16 +7,21 @@
 </head>
 
 <body>
-	<table class="hero_creator">
-	<tr>
-		<td class="hero_creator_left side">{% block left %}{% endblock %}</td>
-		<td class="hero_creator_center">
-			<p>{% block main %}{% endblock %}</p>
-			<p class="hero_creator_navigation">{% block nawigation %}{% endblock %}</p>
-		</td>
-		<td class="hero_creator_right">{% block right %}{% endblock %}</td>
-	</tr>
-	<table>
+		<div id="div_left">
+			{% block left %}x{% endblock %}
+		</div>
+		<div id="div_center">
+			<p>
+				{% block main %}{% endblock %}
+			</p>
+			<p class="hero_creator_navigation">
+				{% block nawigation %}{% endblock %}
+			</p>
+		</div>
+		<div id="div_right">
+			{% block right %}{% endblock %}
+		</div>
+
 {% block hidden %}{% endblock %}
 </body>
 </html>
