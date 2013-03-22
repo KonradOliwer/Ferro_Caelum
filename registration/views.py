@@ -20,7 +20,7 @@ def AccountRegistration(request):
             account = UserProfile(user=user)
 
             account.save()
-            return HttpResponseRedirect('/registration_ok/')
+            return HttpResponseRedirect('/registration/ok/')
         else:
             return render_to_response('register.html', {'form':form}, context_instance = RequestContext(request))
     else:

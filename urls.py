@@ -22,15 +22,9 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
     # Required to make static serving work
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 
-    ('^registration/$', AccountRegistration),
-    ('^registration_ok/$', RegistrationOver.as_view()),
-    (r'^login/$', 'authorization.views.login_user'),
-    (r'^logout/$', 'authorization.views.logout_user'),
+    url(r'^registration/', include('registration.urls')),
+    url(r'^auth/', include('authorization.urls')),
     url(r'^hero_creator/', include('hero_creator.urls')),
-    #mejle
-    (r'^inbox/$', 'message_system.views.inbox'),
-    (r'^outbox/$', 'message_system.views.outbox'),
-     url(r'^mail_view/(?P<message_id>[\d]+)/$', 'message_system.views.view', name='messages_detail'),
-    (r'^new_mail/$', 'message_system.views.compose'),
+    url(r'^mail/', include('message_system.urls')),
 
 )
