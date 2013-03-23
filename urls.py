@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.static import *
 from django.conf import settings
 from registration.views import AccountRegistration,RegistrationOver
+from django.views.generic import TemplateView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -21,10 +22,9 @@ urlpatterns = patterns('',('^$', Homepage.as_view()),
 
     # Required to make static serving work
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-
     url(r'^registration/', include('registration.urls')),
     url(r'^auth/', include('authorization.urls')),
     url(r'^hero_creator/', include('hero_creator.urls')),
     url(r'^mail/', include('message_system.urls')),
-
+    url(r'^accounts/login/', TemplateView.as_view(template_name="login_required.html")),
 )
