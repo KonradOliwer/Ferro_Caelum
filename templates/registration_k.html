@@ -6,13 +6,7 @@
 	</head>
 	<body>
 		<p>
-			Rejestracja pomyślna. Możesz teraz się zalogować.
-		</p>
-		<p>
-			Przejdź do tworzenia bohatera:
-			<a href="{% url hero_creator.views.start %}">
-			<input type="button" value="Dalej"/>
-			</a>
+			Rejestracja pomyślna. Możesz teraz się <a href="{% url authorization.views.login_user %}">zalogować</a>.
 		</p>
 	</body>
 </html>

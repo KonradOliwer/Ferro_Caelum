@@ -14,7 +14,7 @@
     {% endif %}
     {% if user.is_authenticated %}
 
-    <h1>Witaj, {{ user.username }}.</h1>
+    <h1>Witaj, {{ user.username }}. Twój bohater to: {{ user.get_profile.hero }}</h1>
         <!--
         Menu zalogowanego uzytkownika
         -->
