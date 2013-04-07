@@ -9,8 +9,8 @@ def add_package(package, target):
     if not package in target.packages.all():
         target.packages.add(package)
         atributs = package.atributs.all()
-        for atributstat_name in atributs:
-            if (atributstat_name.kind == "stat"):
+        for atribut_name in atributs:
+            if (atribut_name.kind == "stat"):
                 stat = Stat.objects.create(name=atribut_name)
                 target.stats.add(stat)
             else:
