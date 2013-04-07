@@ -7,9 +7,9 @@ from django.views.generic import TemplateView
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
-from views import Homepage
+from views import *
 
-urlpatterns = patterns('',('^$', Homepage.as_view()),
+urlpatterns = patterns('',('^$', homepage),
     # Examples:
     # url(r'^$', 'Ferro_Caelum.views.home', name='home'),
     # url(r'^Ferro_Caelum/', include('Ferro_Caelum.foo.urls')),
