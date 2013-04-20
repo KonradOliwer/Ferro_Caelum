@@ -1,37 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <link rel = "stylesheet" type = "text/css" href = "/media/style.css">
-</head>
-<body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% if user.is_authenticated %}
+{% extends "base_layout.html" %}
 
-    <h1>Witaj, {{ user.username }}. Twój bohater to: {{ user.get_profile.hero }}</h1>
-        <!--
-        Menu zalogowanego uzytkownika
-        -->
-    <details><summary>Poczta <a href="mail/inbox">({{ inbox_count }})</a></summary>
-        <a href="mail/inbox">Skrzynka odbiorcza</a><br>
-        <a href="mail/outbox">Wysłane</a><br>
-        <a href="mail/new_mail">Napisz</a><br>
-    </details>
-    <a href="auth/logout">Wyloguj</a>
-    {% else %}
+{% block title %}Ferro Caelum{% endblock %}
 
-    <h1>Witaj!</h1>
-        <!--
-        Menu NIEzalogowanego uzytkownika
-        -->
-    <a href="registration">Rejestracja</a><br>
-    <a href="auth/login">Logowanie</a>
-    {% endif %}
-</body>
-</html>
+{% block contant %}
+{% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+	<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+		{{ message }}</li>
+		{% endfor %}
+</ul>
+{% endif %}
+{% if user.is_authenticated %}
+
+<h1>Witaj, {{ user.username }}. Twój bohater to: {{ user.get_profile.hero }}</h1>
+<!--
+Menu zalogowanego uzytkownika
+-->
+<details>
+	<summary>
+		Poczta <a href="mail/inbox">({{ inbox_count }})</a>
+	</summary>
+	<a href="mail/inbox">Skrzynka odbiorcza</a>
+	<br>
+	<a href="mail/outbox">Wysłane</a>
+	<br>
+	<a href="mail/new_mail">Napisz</a>
+	<br>
+</details>
+<a href="auth/logout">Wyloguj</a>
+{% else %}
+
+<h1>Witaj!</h1>
+<!--
+Menu NIEzalogowanego uzytkownika
+-->
+<a href="registration">Rejestracja</a>
+<br>
+<a href="auth/login">Logowanie</a>
+{% endif %}
+{% endblock %}

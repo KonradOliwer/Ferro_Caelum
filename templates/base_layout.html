@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<link rel = "stylesheet" type = "text/css" href = "/media/style.css">
+		{% block script %}{% endblock %}
+	</head>
+
+	<body>
+		<div id="top_panel"></div>
+		<div id="right_panel"></div>
+		<div id="left_panel"></div>
+		<div id="center">{% block contant %}{% endblock %}</div>
+	</body>
+</html>

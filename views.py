@@ -9,7 +9,7 @@ def homepage(request):
     main = loader.get_template('homepage.html')
     hero_creator = loader.get_template('hero_creator/start.html')
     user = request.user;
-    context = RequestContext(request)
+    context = RequestContext(request, {'user': user, })
     if (request.user != AnonymousUser() and not request.user.get_profile().hero):
         return HttpResponse(hero_creator.render(context))
     else:
