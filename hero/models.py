@@ -10,7 +10,7 @@ def add_package(package, target):
         target.packages.add(package)
         atributs = package.atributs.all()
         for atribut_name in atributs:
-            if (atribut_name.kind == "stat"):
+            if (atribut_name.kind == 1):
                 stat = Stat.objects.create(name=atribut_name)
                 target.stats.add(stat)
             else:

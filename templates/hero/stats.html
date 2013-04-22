@@ -1,0 +1,56 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Bohater{% endblock %}
+
+{% block contant %}
+<h1>{{ hero.name }}</h1>
+
+<div>
+	<h3>Informacje podstawowe:</h3>
+	<p>
+		Poziom: {{ hero.lvl }}
+	</p>
+	<p>
+		Klasa postaci: {{ hero.profession.name }}
+	</p>
+	<p>
+		Linia krwii: {{ hero.bloodline.name }}
+	</p>
+</div>
+
+<div>
+	<h3>Statystyki główne: </h3>
+	<ul>
+		{% for bar in bars_base %}
+		<li>
+			{{ bar.name.name }}: {{ bar.current_value }}
+		</li>
+		{% endfor %}
+	</ul>
+	<ul>
+		{% for stat in stats_base %}
+		<li>
+			{{ stat.name.name }}: {{ stat.current_value }}
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+
+<div>
+	<h3>Statystyki poboczne: </h3>
+	<ul>
+		{% for stat in bars_computable %}
+		<li>
+			{{ bar.name.name }}: {{ bar.current_value }}
+		</li>
+		{% endfor %}
+	</ul>
+	<ul>
+		{% for stat in stats_computable %}
+		<li>
+			{{ stat.name.name }}: {{ stat.current_value }}
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}

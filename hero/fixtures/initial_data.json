@@ -64,7 +64,7 @@
     "model": "hero.package",
     "pk": 1,
     "fields": {
-      "name": "wojownik",
+      "name": "postac",
       "atributs": [1,2,3,4],
       "slots": []
     }

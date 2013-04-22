@@ -26,5 +26,6 @@ urlpatterns = patterns('',('^$', homepage),
     url(r'^auth/', include('authorization.urls')),
     url(r'^hero_creator/', include('hero_creator.urls')),
     url(r'^mail/', include('message_system.urls')),
+    url(r'^hero/', include('hero.urls')),
     url(r'^accounts/login/', TemplateView.as_view(template_name="login_required.html")),
 )

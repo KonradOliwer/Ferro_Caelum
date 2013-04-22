@@ -118,9 +118,19 @@ def confirm(request):
 def end(request):
     if request.method == 'POST':
         profile = request.user.get_profile()
-        profile.hero = Hero.objects.create(name=request.session.get('name'),
+        hero = Hero.objects.create(name=request.session.get('name'),
             bloodline=BloodLine.objects.get(pk=request.session.get('blood_line')),
             profession=Profession.objects.get(pk=request.session.get('profession')))
+        
+        packages = Package.objects.filter(name="postac")
+        if packages.exists():
+            add_package(packages[0], hero)
+                
+        packages = Package.objects.filter(name="bohater")
+        if packages.exists():
+            add_package(packages[0], hero)
+                
+        profile.hero = hero        
         profile.save()
         del request.session['name']
         del request.session['blood_line']
