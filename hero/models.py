@@ -2,7 +2,7 @@
 from django.db import models
 from dics import *
 from condition import Condition
-from atributs import *
+from hero.attributes import *
 
 def add_package(package, target):
     """Dodaje celowi pakiet i dostarcza wszystkich w nim zawartych elementów"""
@@ -11,11 +11,9 @@ def add_package(package, target):
         atributs = package.atributs.all()
         for atribut_name in atributs:
             if (atribut_name.kind == 1):
-                stat = Stat.objects.create(name=atribut_name)
-                target.stats.add(stat)
+                stat = Stat.objects.create(name=atribut_name, owner=target)
             else:
-                bar = Bar.objects.create(name=atribut_name)
-                target.stats.add(bar)
+                bar = Bar.objects.create(name=atribut_name, owner=target)
         slots = package.slots.all()
         for slot in slots:
             target.slots.add(slot)
@@ -36,9 +34,13 @@ class Fighter(models.Model):
     packages = models.ManyToManyField(Package)
     name = models.CharField(max_length=50)
     lvl = models.PositiveSmallIntegerField(default=1)
-    stats = models.ManyToManyField(Stat)
-    bars = models.ManyToManyField(Bar)
     ability = models.ManyToManyField(Ability)
+    
+    def get_stats(self):
+        return Stat.objects.filter(owner=self);
+    
+    def get_bars(self):
+        return Bar.objects.filter(owner=self);
     
     def save(self, *args, **kwargs):
         super(Fighter, self).save(*args, **kwargs)
@@ -46,21 +48,44 @@ class Fighter(models.Model):
         add_package(package, self)
          
     def setattr(self, name, kind, value_change):
-        try:
+        if hasattr(self, name):
             setattr(self, name, value_change)
-        except AttributeError:
-            stat = self.stats.get(name__name=name)
-            setattr(stat, kind, value_change)   
+        else:
+            stat = Stat.objects.filter(owner=self.pk).get(name__name=name)
+            if stat:
+                setattr(stat, kind, value_change)
+                stat.save()
+                print(getattr(stat, kind))
+            else:
+                bar = Bar.objects.filter(owner=self.pk).get(name__name=name)
+                setattr(bar, kind, value_change) 
+                bar.save()  
     
     def getattr(self, name, kind=None):
         try:
             return getattr(self, name)
         except AttributeError:
-            stat = self.stats.get(name__name=name)
-            if kind is None:
-                return stat.current_value()
+            stat = Stat.objects.filter(owner=self.pk).get(name__name=name)
+            if stat:
+                if kind is None:
+                    return stat.current_value()
+                else:
+                    return getattr(attribute, kind)
             else:
-                return getattr(stat, kind)   
+                bar = Bar.objects.filter(owner=self.pk).get(name__name=name)
+                if kind is None:
+                    return bar.current_value()
+                else:
+                    return getattr(attribute, kind)
+            
+    def recompute_attributes(self):
+        """Aktualizuje wartości atrybutów obliczalnych (pole formula != null)"""
+        stats = self.get_stats()
+        for stat in stats:
+            stat.recompute()
+        bars = self.get_bars()
+        for bar in bars:
+            bar.recompute()
             
     def get_item_stat(self):
         return None
@@ -71,32 +96,37 @@ class Fighter(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
     
-class Item(models.Model):
-    name = models.CharField(max_length=50)
-    kind = models.ManyToManyField(Package)
-    stats = models.ManyToManyField(Stat)
-    abilities = models.ManyToManyField(Ability)
-    used_slots = models.ManyToManyField(Slot)
-            
-    def setattr(self, name, kind, value_change):
-        try:
-            setattr(self, name, value_change)
-        except AttributeError:
-            stat = self.stats.get(name__name=name)
-            setattr(stat, kind, value_change)   
+def fighter_recompute(instance, **kwargs):
+    instance.recompute_attributes()
     
-    def getattr(self, name, kind=None):
-        try:
-            return getattr(self, name)
-        except AttributeError:
-            try:
-                stat = self.stats.get(name__name=name)
-            except Stat.DoesNotExist:
-                return None
-            if kind is None:
-                return stat.current_value()
-            else:
-                return getattr(stat, kind)    
+# models.signals.pre_save.connect(fighter_recompute, Fighter)
+    
+# class Item(models.Model):
+#    name = models.CharField(max_length=50)
+#    kind = models.ManyToManyField(Package)
+#    stats = models.ManyToManyField(Stat)
+#    abilities = models.ManyToManyField(Ability)
+#    used_slots = models.ManyToManyField(Slot)
+#            
+#    def setattr(self, name, kind, value_change):
+#        try:
+#            setattr(self, name, value_change)
+#        except AttributeError:
+#            stat = self.stats.get(name__name=name)
+#            setattr(stat, kind, value_change)   
+#    
+#    def getattr(self, name, kind=None):
+#        try:
+#            return getattr(self, name)
+#        except AttributeError:
+#            try:
+#                stat = self.stats.get(name__name=name)
+#            except Stat.DoesNotExist:
+#                return None
+#            if kind is None:
+#                return stat.current_value()
+#            else:
+#                return getattr(stat, kind)    
     
 class NPCFighter(Fighter):
     pass
@@ -117,8 +147,8 @@ class Hero(Fighter):
     can_figth = models.BooleanField(default=True)
     energy = models.PositiveIntegerField(default=10)
     current_energy = models.PositiveIntegerField(default=10)
-    equiped_items = models.ManyToManyField(Item, related_name='equiped')
-    items = models.ManyToManyField(Item, related_name='unequiped')
+#    equiped_items = models.ManyToManyField(Item, related_name='equiped')
+#    items = models.ManyToManyField(Item, related_name='unequiped')
     
     def save(self, *args, **kwargs):
         super(Fighter, self).save(*args, **kwargs)

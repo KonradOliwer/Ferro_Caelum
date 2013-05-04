@@ -8,9 +8,15 @@ class AtributType(models.Model):
     description = models.CharField(max_length=500)
     formula = models.ForeignKey(Formula, null=True, blank=True, default = None)
     kind = models.IntegerField(choices=ATRIBUT_KIND_CHOICES, default=1)
-      
+  
+    def __unicode__(self):
+        return u'Rodzaj atrybutu: %s' % self.name    
+    
 class Slot(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)  
+    
+    def __unicode__(self):
+        return u'Slot: %s' % self.name   
     
 class Package(models.Model):
     name = models.CharField(max_length=50)

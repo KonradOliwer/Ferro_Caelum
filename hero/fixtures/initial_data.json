@@ -57,7 +57,7 @@
     "model": "hero.Slot",
     "pk": 1,
     "fields": {
-      "name": "wapon"
+      "name": "weapon"
     }
   },
   {
