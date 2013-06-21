@@ -30,7 +30,6 @@ class SimpleTest(TestCase):
 #        item.stats.add(range_damage_gun_stat)
 #        self.hero.equiped_items.add(item)
         self.hero.setattr('power', 'base', 10)
-        print(self.stat1.base)
         Formula.objects.create(text='5')
         Formula.objects.create(text='- 5')
         Formula.objects.create(text='- 5 * 3')

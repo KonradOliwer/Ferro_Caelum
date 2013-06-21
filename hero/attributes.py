@@ -9,10 +9,17 @@ class Attribute(models.Model):
     additive = models.IntegerField(default=0)
     percent = models.PositiveIntegerField(default=0)
     base = models.IntegerField(default=1)
-    owner = models.ForeignKey('Fighter')
+    owner = models.ForeignKey('Actor')
     
     class Meta:
         abstract = True
+        
+    def getattr(self, type):
+        if hasattr(self, type):
+            gatattr(self, type)
+        else:
+            if hasattr(self.name, type):
+                gatattr(self.name, type)
         
     def current_value(self):
         """
@@ -25,7 +32,7 @@ class Attribute(models.Model):
     def recompute(self):
         """Aktualizuje wartość atrybutu wyliczanego z formuły"""
         if self.name.formula:
-            formula.calculate()
+            self.name.formula.calculate(self, self)
             
     def save(self, *args, **kwargs):
         self.owner.recompute_attributes()
@@ -33,7 +40,7 @@ class Attribute(models.Model):
     
     def __unicode__(self):
         return u'%s%d: %d' % (self.name.name, self.pk, self.current_value())
-
+    
 class Stat(Attribute):
     """
     Współczynnik względnie stała, modyfikowana jedynie przy awansie postaci, oraz przez efekty.

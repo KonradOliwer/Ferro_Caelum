@@ -30,7 +30,7 @@ class Ability(models.Model):
     stats_abilities_requirements = models.ManyToManyField(Condition)
     effects = models.ManyToManyField(Effect)
     
-class Fighter(models.Model):
+class Actor(models.Model):
     packages = models.ManyToManyField(Package)
     name = models.CharField(max_length=50)
     lvl = models.PositiveSmallIntegerField(default=1)
@@ -43,7 +43,7 @@ class Fighter(models.Model):
         return Bar.objects.filter(owner=self);
     
     def save(self, *args, **kwargs):
-        super(Fighter, self).save(*args, **kwargs)
+        super(Actor, self).save(*args, **kwargs)
         package = Package.objects.get(name='wojownik')
         add_package(package, self)
          
@@ -55,7 +55,6 @@ class Fighter(models.Model):
             if stat:
                 setattr(stat, kind, value_change)
                 stat.save()
-                print(getattr(stat, kind))
             else:
                 bar = Bar.objects.filter(owner=self.pk).get(name__name=name)
                 setattr(bar, kind, value_change) 
@@ -70,13 +69,13 @@ class Fighter(models.Model):
                 if kind is None:
                     return stat.current_value()
                 else:
-                    return getattr(attribute, kind)
+                    return getattr(stat, kind)
             else:
                 bar = Bar.objects.filter(owner=self.pk).get(name__name=name)
                 if kind is None:
                     return bar.current_value()
                 else:
-                    return getattr(attribute, kind)
+                    return getattr(bar, kind)
             
     def recompute_attributes(self):
         """Aktualizuje wartości atrybutów obliczalnych (pole formula != null)"""
@@ -98,8 +97,6 @@ class Fighter(models.Model):
     
 def fighter_recompute(instance, **kwargs):
     instance.recompute_attributes()
-    
-# models.signals.pre_save.connect(fighter_recompute, Fighter)
     
 # class Item(models.Model):
 #    name = models.CharField(max_length=50)
@@ -128,7 +125,7 @@ def fighter_recompute(instance, **kwargs):
 #            else:
 #                return getattr(stat, kind)    
     
-class NPCFighter(Fighter):
+class NPCFighter(Actor):
     pass
 
 class BloodLine(models.Model):
@@ -139,7 +136,7 @@ class Profession(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
 
-class Hero(Fighter):
+class Hero(Actor):
     exp = models.PositiveIntegerField(default=0)
     bloodline = models.ForeignKey(BloodLine)
     profession = models.ForeignKey(Profession)
@@ -151,7 +148,7 @@ class Hero(Fighter):
 #    items = models.ManyToManyField(Item, related_name='unequiped')
     
     def save(self, *args, **kwargs):
-        super(Fighter, self).save(*args, **kwargs)
+        super(Actor, self).save(*args, **kwargs)
         package = Package.objects.get(name='bohater')
         add_package(package, self)
     
